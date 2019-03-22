@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Fooding</string>
+    <string name="photo">Photo</string>
+    <string name="cust_name">Name</string>
+    <string name="cust_addr">Address</string>
+    <string name="save_btn">Save</string>
+</resources>

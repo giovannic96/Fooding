@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/avatar"
+        android:layout_marginTop="20dp"
+        android:clickable="true"
+        android:layout_gravity="center"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:contentDescription="@string/photo"
+        android:src="@drawable/ic_launcher_foreground"
+        app:civ_border_color="#d1b1b1"
+        app:civ_fill_color="@color/colorAccent"
+        android:foregroundGravity="center"
+        android:focusable="true" />
+    <EditText
+        android:id="@+id/edit_text1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="@string/cust_name"
+        android:layout_marginTop="40dp"
+        />
+    <EditText
+        android:id="@+id/edit_text2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textVisiblePassword"
+        android:hint="@string/cust_addr"
+        android:layout_marginTop="25dp"
+        />
+    <Button
+        android:id="@+id/btn_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save_btn"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"/>
+    </LinearLayout>
