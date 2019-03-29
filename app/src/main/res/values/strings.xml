@@ -4,4 +4,5 @@
     <string name="cust_name">Name</string>
     <string name="cust_addr">Address</string>
     <string name="save_btn">Save</string>
+    <string name="edit_mode">Edit Mode</string>
 </resources>
