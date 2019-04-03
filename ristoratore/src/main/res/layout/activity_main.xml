@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="20dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:ristoratore="http://schemas.android.com/apk/res-auto"
         android:id="@+id/avatar"
         android:layout_marginTop="20dp"
         android:layout_gravity="center"
@@ -18,8 +17,8 @@
         android:layout_height="160dp"
         android:contentDescription="@string/photo"
         android:src="@drawable/ic_launcher_foreground"
-        app:civ_border_color="#d1b1b1"
-        app:civ_fill_color="@color/colorAccent"
+        ristoratore:civ_border_color="#d1b1b1"
+        ristoratore:civ_fill_color="@color/colorAccent"
         android:foregroundGravity="center"
         />
 
@@ -56,11 +55,11 @@
         android:textAppearance="@android:style/TextAppearance.Material.Large" />
 
     <TextView
-        android:id="@+id/card_text"
+        android:id="@+id/hour_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:hint="@string/cust_card"
+        android:hint="@string/cust_hour"
         android:textAppearance="@android:style/TextAppearance.Material.Large" />
 
     <TextView

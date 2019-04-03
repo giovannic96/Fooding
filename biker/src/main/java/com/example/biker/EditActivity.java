@@ -1,4 +1,4 @@
-package com.example.fooding;
+package com.example.biker;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -36,19 +36,19 @@ public class EditActivity extends AppCompatActivity {
     private static final int STORAGE_PERMISSION_CODE = 100;
     public static final String URI_PREFS = "uri_prefs";
     public static final String NAME_PREFS = "name_prefs";
-    public static final String ADDR_PREFS = "address_prefs";
     public static final String TEL_PREFS = "tel_prefs";
     public static final String MAIL_PREFS = "mail_prefs";
-    public static final String CARD_PREFS = "card_prefs";
+    public static final String HOUR_PREFS = "hour_prefs";
+    public static final String AREA_PREFS = "area_prefs";
     public static final String INFO_PREFS = "info_prefs";
 
     private CircleImageView avatar;
     private Button save_btn;
     private EditText name_et;
-    private EditText addr_et;
     private EditText tel_et;
     private EditText mail_et;
-    private EditText card_et;
+    private EditText hour_et;
+    private EditText area_et;
     private EditText info_et;
     private Uri selectedImage;
     SharedPreferences preferences;
@@ -64,26 +64,27 @@ public class EditActivity extends AppCompatActivity {
         avatar = findViewById(R.id.avatar);
         save_btn = findViewById(R.id.avatar_btn);
         name_et = findViewById(R.id.name_et);
-        addr_et = findViewById(R.id.address_et);
         tel_et = findViewById(R.id.tel_et);
         mail_et = findViewById(R.id.mail_et);
-        card_et = findViewById(R.id.card_et);
+        hour_et = findViewById(R.id.hour_et);
+        area_et = findViewById(R.id.area_et);
         info_et = findViewById(R.id.info_et);
 
         if(preferences.contains(EditActivity.URI_PREFS))
             avatar.setImageURI(Uri.parse(preferences.getString(URI_PREFS, "")));
         if(preferences.contains(EditActivity.NAME_PREFS))
             name_et.setText(preferences.getString(NAME_PREFS, ""));
-        if(preferences.contains(EditActivity.ADDR_PREFS))
-            addr_et.setText(preferences.getString(ADDR_PREFS, ""));
         if(preferences.contains(EditActivity.TEL_PREFS))
             tel_et.setText(preferences.getString(TEL_PREFS, ""));
         if(preferences.contains(EditActivity.MAIL_PREFS))
             mail_et.setText(preferences.getString(MAIL_PREFS, ""));
-        if(preferences.contains(EditActivity.CARD_PREFS))
-            card_et.setText(preferences.getString(CARD_PREFS, ""));
+        if(preferences.contains(EditActivity.HOUR_PREFS))
+            hour_et.setText(preferences.getString(HOUR_PREFS, ""));
+        if(preferences.contains(EditActivity.AREA_PREFS))
+            area_et.setText(preferences.getString(AREA_PREFS, ""));
         if(preferences.contains(EditActivity.INFO_PREFS))
             info_et.setText(preferences.getString(INFO_PREFS, ""));
+
 
         if (savedInstanceState != null){
             if(savedInstanceState.containsKey("uri"))
@@ -104,10 +105,6 @@ public class EditActivity extends AppCompatActivity {
                 editor.putString(NAME_PREFS, name_et.getText().toString());
                 editor.apply();
             }
-            if(!(addr_et.getText().toString().equals(preferences.getString(ADDR_PREFS, "")))) {
-                editor.putString(ADDR_PREFS, addr_et.getText().toString());
-                editor.apply();
-            }
             if(!(tel_et.getText().toString().equals(preferences.getString(TEL_PREFS, "")))) {
                 editor.putString(TEL_PREFS, tel_et.getText().toString());
                 editor.apply();
@@ -116,8 +113,12 @@ public class EditActivity extends AppCompatActivity {
                 editor.putString(MAIL_PREFS, mail_et.getText().toString());
                 editor.apply();
             }
-            if(!(card_et.getText().toString().equals(preferences.getString(CARD_PREFS, "")))) {
-                editor.putString(CARD_PREFS, card_et.getText().toString());
+            if(!(hour_et.getText().toString().equals(preferences.getString(HOUR_PREFS, "")))) {
+                editor.putString(HOUR_PREFS, hour_et.getText().toString());
+                editor.apply();
+            }
+            if(!(area_et.getText().toString().equals(preferences.getString(AREA_PREFS, "")))) {
+                editor.putString(AREA_PREFS, area_et.getText().toString());
                 editor.apply();
             }
             if(!(info_et.getText().toString().equals(preferences.getString(INFO_PREFS, "")))) {
