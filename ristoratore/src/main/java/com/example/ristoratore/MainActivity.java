@@ -1,4 +1,4 @@
-package com.example.fooding;
+package com.example.ristoratore;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView addr_tv;
     private TextView tel_tv;
     private TextView mail_tv;
-    private TextView card_tv;
+    private TextView hour_tv;
     private TextView info_tv;
 
     @Override
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         addr_tv = findViewById(R.id.address_text);
         tel_tv = findViewById(R.id.tel_text);
         mail_tv = findViewById(R.id.mail_text);
-        card_tv = findViewById(R.id.card_text);
+        hour_tv = findViewById(R.id.hour_text);
         info_tv = findViewById(R.id.info_text);
     }
 
@@ -51,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
             tel_tv.setText(preferences.getString(EditActivity.TEL_PREFS, ""));
         if(preferences.contains(EditActivity.MAIL_PREFS))
             mail_tv.setText(preferences.getString(EditActivity.MAIL_PREFS, ""));
-        if(preferences.contains(EditActivity.CARD_PREFS))
-            card_tv.setText(preferences.getString(EditActivity.CARD_PREFS, ""));
+        if(preferences.contains(EditActivity.HOUR_PREFS))
+            hour_tv.setText(preferences.getString(EditActivity.HOUR_PREFS, ""));
         if(preferences.contains(EditActivity.INFO_PREFS))
             info_tv.setText(preferences.getString(EditActivity.INFO_PREFS, ""));
     }

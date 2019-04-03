@@ -32,14 +32,6 @@
         android:textAppearance="@android:style/TextAppearance.Material.Large" />
 
     <TextView
-        android:id="@+id/address_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:hint="@string/cust_addr"
-        android:textAppearance="@android:style/TextAppearance.Material.Large" />
-
-    <TextView
         android:id="@+id/tel_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -56,11 +48,19 @@
         android:textAppearance="@android:style/TextAppearance.Material.Large" />
 
     <TextView
-        android:id="@+id/card_text"
+        android:id="@+id/hour_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:hint="@string/cust_card"
+        android:hint="@string/cust_hour"
+        android:textAppearance="@android:style/TextAppearance.Material.Large" />
+
+    <TextView
+        android:id="@+id/area_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:hint="@string/cust_area"
         android:textAppearance="@android:style/TextAppearance.Material.Large" />
 
     <TextView
