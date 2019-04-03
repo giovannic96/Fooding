@@ -65,6 +65,14 @@ public class EditActivity extends AppCompatActivity {
         if(preferences.contains(EditActivity.ADDR_PREFS))
             addr_et.setText(preferences.getString(ADDR_PREFS, ""));
 
+        if (savedInstanceState != null){
+            if(savedInstanceState.containsKey("uri"))
+            {
+                selectedImage = savedInstanceState.getParcelable("uri");
+                avatar.setImageURI(selectedImage);
+            }
+        }
+
         avatar.setOnClickListener(e -> {
             if(isStoragePermissionGranted()) {
                 selectImage();
@@ -87,6 +95,13 @@ public class EditActivity extends AppCompatActivity {
 
             finish();
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(selectedImage != null && !(selectedImage.toString().equals(preferences.getString(URI_PREFS, ""))))
+            outState.putParcelable("uri", selectedImage);
     }
 
     public boolean isStoragePermissionGranted() {
