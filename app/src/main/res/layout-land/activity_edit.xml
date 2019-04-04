@@ -2,81 +2,110 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="20dp">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="20dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/avatar"
+        android:layout_alignParentStart="true"
         android:layout_marginTop="20dp"
         android:clickable="true"
         android:layout_gravity="center"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
         android:contentDescription="@string/photo"
         android:src="@drawable/ic_launcher_foreground"
         app:civ_border_color="#d1b1b1"
         app:civ_fill_color="@color/colorAccent"
         android:foregroundGravity="center"
-        android:focusable="true" />
+        android:focusable="true"
+        android:layout_marginEnd="22dp"/>
     <EditText
         android:id="@+id/name_et"
+        android:imeOptions="flagNoExtractUi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
         android:hint="@string/cust_name"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="4dp"
+        android:layout_toEndOf="@+id/avatar"
         />
     <EditText
         android:id="@+id/address_et"
+        android:imeOptions="flagNoExtractUi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textVisiblePassword"
         android:hint="@string/cust_addr"
-        android:layout_marginTop="25dp"
+        android:layout_marginBottom="4dp"
+        android:layout_toEndOf="@+id/avatar"
+        android:layout_below="@+id/name_et"
         />
     <EditText
         android:id="@+id/tel_et"
+        android:imeOptions="flagNoExtractUi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="phone"
         android:hint="@string/cust_tel"
-        android:layout_marginTop="25dp"
+        android:layout_marginBottom="4dp"
+        android:layout_toEndOf="@+id/avatar"
+        android:layout_below="@+id/address_et"
         />
     <EditText
         android:id="@+id/mail_et"
+        android:imeOptions="flagNoExtractUi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:hint="@string/cust_mail"
-        android:layout_marginTop="25dp"
+        android:layout_marginBottom="4dp"
+        android:layout_toEndOf="@+id/avatar"
+        android:layout_below="@+id/tel_et"
         />
     <EditText
         android:id="@+id/card_et"
+        android:imeOptions="flagNoExtractUi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="number"
         android:hint="@string/cust_card"
-        android:layout_marginTop="25dp"
+        android:layout_marginBottom="4dp"
+        android:layout_toEndOf="@+id/avatar"
+        android:layout_below="@+id/mail_et"
         />
     <EditText
         android:id="@+id/info_et"
+        android:imeOptions="flagNoExtractUi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
         android:hint="@string/cust_info"
-        android:layout_marginTop="25dp"
+        android:layout_marginBottom="4dp"
+        android:layout_toEndOf="@+id/avatar"
+        android:layout_below="@+id/card_et"
         />
+
     <Button
         android:id="@+id/avatar_btn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
+        android:layout_below="@+id/avatar"
+        android:layout_alignStart="@+id/avatar"
+        android:layout_alignEnd="@+id/avatar"
+        android:layout_marginTop="22dp"
+        android:layout_marginBottom="21dp"
+        android:gravity="center"
         android:text="@string/save_btn"
-        android:layout_gravity="center"
-        android:layout_marginTop="50dp"/>
-    </LinearLayout>
+        android:textSize="18sp"/>
+    </RelativeLayout>
 
 </ScrollView>
