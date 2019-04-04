@@ -1,9 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditActivity">
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp">
 
-</android.support.constraint.ConstraintLayout>
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:ristoratore="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/avatar"
+        android:layout_marginTop="20dp"
+        android:clickable="true"
+        android:layout_gravity="center"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:contentDescription="@string/photo"
+        android:src="@drawable/ic_launcher_foreground"
+        ristoratore:civ_border_color="#d1b1b1"
+        ristoratore:civ_fill_color="@color/colorAccent"
+        android:foregroundGravity="center"
+        android:focusable="true" />
+    <EditText
+        android:id="@+id/name_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="@string/cust_name"
+        android:layout_marginTop="40dp"
+        />
+    <EditText
+        android:id="@+id/address_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textVisiblePassword"
+        android:hint="@string/cust_addr"
+        android:layout_marginTop="25dp"
+        />
+    <EditText
+        android:id="@+id/tel_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="phone"
+        android:hint="@string/cust_tel"
+        android:layout_marginTop="25dp"
+        />
+    <EditText
+        android:id="@+id/mail_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:hint="@string/cust_mail"
+        android:layout_marginTop="25dp"
+        />
+    <EditText
+        android:id="@+id/hour_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="@string/cust_hour"
+        android:layout_marginTop="25dp"
+        />
+    <EditText
+        android:id="@+id/info_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="@string/cust_info"
+        android:layout_marginTop="25dp"
+        />
+    <Button
+        android:id="@+id/avatar_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save_btn"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"/>
+    </LinearLayout>
+
+</ScrollView>

@@ -17,7 +17,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -57,7 +56,7 @@ public class EditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.linear);
+        setContentView(R.layout.activity_edit);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = preferences.edit();
@@ -181,11 +180,9 @@ public class EditActivity extends AppCompatActivity {
 
     private void cameraIntent() {
         Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
         selectedImage = FileProvider.getUriForFile(EditActivity.this, BuildConfig.APPLICATION_ID + ".provider", Objects.requireNonNull(getOutputMediaFile()));
         takePicture.putExtra(MediaStore.EXTRA_OUTPUT, selectedImage);
         takePicture.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
         startActivityForResult(takePicture, CAM_REQ);
     }
 
@@ -195,9 +192,7 @@ public class EditActivity extends AppCompatActivity {
 
         switch (requestCode) {
             case CAM_REQ:
-                if (imageReturnedIntent != null && resultCode == RESULT_OK) {
-                    /* Bitmap bm = (Bitmap)imageReturnedIntent.getExtras().get("data");
-                    avatar.setImageBitmap(bm); */
+                if (resultCode == RESULT_OK) {
                     avatar.setImageURI(selectedImage);
                 }
                 break;

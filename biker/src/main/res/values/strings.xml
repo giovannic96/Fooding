@@ -2,11 +2,10 @@
     <string name="app_name">Biker</string>
     <string name="photo">Photo</string>
     <string name="cust_name">Name</string>
-    <string name="cust_tel">Telephone Number</string>
+    <string name="cust_tel">Telephone number</string>
     <string name="cust_mail">E-mail</string>
-    <string name="cust_hour">Work Hours</string>
-    <string name="cust_area">Work Area</string>
+    <string name="cust_hour">Work hours</string>
+    <string name="cust_area">Work area</string>
     <string name="cust_info">Extra Information</string>
     <string name="save_btn">Save</string>
-    <string name="edit_mode">Edit Mode</string>
 </resources>
