@@ -1,15 +1,22 @@
 package com.example.fooding;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import java.io.File;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -42,8 +49,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(preferences.contains(EditActivity.URI_PREFS))
+        if(preferences.contains(EditActivity.URI_PREFS)) {
             avatar.setImageURI(Uri.parse(preferences.getString(EditActivity.URI_PREFS, "")));
+            if(avatar.getDrawable() == null)
+                avatar.setImageResource(R.drawable.ic_launcher_foreground);
+        }
         if(preferences.contains(EditActivity.NAME_PREFS))
             name_tv.setText(preferences.getString(EditActivity.NAME_PREFS, ""));
         if(preferences.contains(EditActivity.ADDR_PREFS))
