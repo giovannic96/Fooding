@@ -69,8 +69,11 @@ public class EditActivity extends AppCompatActivity {
         card_et = findViewById(R.id.card_et);
         info_et = findViewById(R.id.info_et);
 
-        if(preferences.contains(EditActivity.URI_PREFS))
-            avatar.setImageURI(Uri.parse(preferences.getString(URI_PREFS, "")));
+        if(preferences.contains(EditActivity.URI_PREFS)) {
+            avatar.setImageURI(Uri.parse(preferences.getString(EditActivity.URI_PREFS, "")));
+            if (avatar.getDrawable() == null)
+                avatar.setImageResource(R.drawable.ic_launcher_foreground);
+        }
         if(preferences.contains(EditActivity.NAME_PREFS))
             name_et.setText(preferences.getString(NAME_PREFS, ""));
         if(preferences.contains(EditActivity.ADDR_PREFS))

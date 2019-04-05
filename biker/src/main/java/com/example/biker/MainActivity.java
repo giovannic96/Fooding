@@ -41,8 +41,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(preferences.contains(EditActivity.URI_PREFS))
+        if(preferences.contains(EditActivity.URI_PREFS)) {
             avatar.setImageURI(Uri.parse(preferences.getString(EditActivity.URI_PREFS, "")));
+            if(avatar.getDrawable() == null)
+                avatar.setImageResource(R.drawable.ic_launcher_foreground);
+        }
         if(preferences.contains(EditActivity.NAME_PREFS))
             name_tv.setText(preferences.getString(EditActivity.NAME_PREFS, ""));
         if(preferences.contains(EditActivity.TEL_PREFS))
