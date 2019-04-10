@@ -8,4 +8,12 @@
     <string name="cust_hour">Work hours</string>
     <string name="cust_info">Extra information</string>
     <string name="save_btn">Save</string>
+    <string name="orders_btn">ORDERS</string>
+    <string name="dailyoffer_btn">DAILY OFFER</string>
+    <string name="profile_btn">PROFILE</string>
+    <string name="add_dish_btn">Add dish</string>
+    <string name="dish_desc">Description</string>
+    <string name="dish_price">Price</string>
+    <string name="dish_qty">Available quantity</string>
+    <string name="dish_photo">Dish photo</string>
 </resources>
