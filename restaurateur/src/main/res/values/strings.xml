@@ -11,7 +11,12 @@
     <string name="orders_btn">ORDERS</string>
     <string name="dailyoffer_btn">DAILY OFFER</string>
     <string name="profile_btn">PROFILE</string>
-    <string name="add_dish_btn">Add dish</string>
+    <string name="add_dish">Add dish</string>
+    <string name="remove_dish">Remove dish</string>
+    <string name="removeAll_dish">Remove all dishes</string>
+    <string name="update_dish">Update dish</string>
+    <string name="move_dish">Move dish</string>
+    <string name="dish_name">Name</string>
     <string name="dish_desc">Description</string>
     <string name="dish_price">Price</string>
     <string name="dish_qty">Available quantity</string>

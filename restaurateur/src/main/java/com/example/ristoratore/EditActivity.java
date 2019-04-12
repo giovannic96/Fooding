@@ -130,7 +130,6 @@ public class EditActivity extends AppCompatActivity {
                 editor.putString(URI_PREFS, selectedImage.toString());
                 editor.apply();
             }
-
             finish();
         });
     }

@@ -15,7 +15,7 @@
         android:layout_height="100dp"
         android:layout_gravity="center"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="430dp"
+        android:layout_marginTop="230dp"
         android:gravity="center"
         android:text="@string/add_dish"
         android:textAppearance="@android:style/TextAppearance.Material.Large" />
@@ -25,11 +25,48 @@
         android:layout_width="200dp"
         android:layout_height="100dp"
         android:layout_gravity="center"
-        android:layout_marginTop="430dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="230dp"
         android:layout_marginEnd="10dp"
+        android:layout_toEndOf="@+id/add_dish_btn"
         android:gravity="center"
         android:text="@string/remove_dish"
-        android:layout_toEndOf="@+id/add_dish_btn"
+        android:textAppearance="@android:style/TextAppearance.Material.Large" />
+
+    <Button
+        android:id="@+id/removeAll_dish_btn"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="350dp"
+        android:gravity="center"
+        android:text="@string/removeAll_dish"
+        android:textAppearance="@android:style/TextAppearance.Material.Large" />
+
+    <Button
+        android:id="@+id/update_dish_btn"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="350dp"
+        android:layout_marginEnd="10dp"
+        android:layout_toEndOf="@+id/removeAll_dish_btn"
+        android:gravity="center"
+        android:text="@string/update_dish"
+        android:textAppearance="@android:style/TextAppearance.Material.Large" />
+
+    <Button
+        android:id="@+id/move_dish_btn"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="450dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="center"
+        android:text="@string/move_dish"
         android:textAppearance="@android:style/TextAppearance.Material.Large" />
 
 </RelativeLayout>
