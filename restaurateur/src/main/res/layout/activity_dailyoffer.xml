@@ -7,14 +7,16 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/dishes_rView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginBottom="100dp"
+        android:background="@android:color/darker_gray"/>
 
     <Button
         android:id="@+id/add_dish_btn"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="230dp"
         android:gravity="center"
         android:text="@string/add_dish"
@@ -22,49 +24,46 @@
 
     <Button
         android:id="@+id/remove_dish_btn"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="230dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="280dp"
         android:layout_marginEnd="10dp"
-        android:layout_toEndOf="@+id/add_dish_btn"
         android:gravity="center"
         android:text="@string/remove_dish"
         android:textAppearance="@android:style/TextAppearance.Material.Large" />
 
     <Button
         android:id="@+id/removeAll_dish_btn"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="350dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="330dp"
         android:gravity="center"
         android:text="@string/removeAll_dish"
         android:textAppearance="@android:style/TextAppearance.Material.Large" />
 
     <Button
         android:id="@+id/update_dish_btn"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="350dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="380dp"
         android:layout_marginEnd="10dp"
-        android:layout_toEndOf="@+id/removeAll_dish_btn"
         android:gravity="center"
         android:text="@string/update_dish"
         android:textAppearance="@android:style/TextAppearance.Material.Large" />
 
     <Button
         android:id="@+id/move_dish_btn"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginStart="120dp"
-        android:layout_marginTop="450dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="430dp"
         android:gravity="center"
         android:text="@string/move_dish"
         android:textAppearance="@android:style/TextAppearance.Material.Large" />

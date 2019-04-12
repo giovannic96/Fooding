@@ -8,15 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.ristoratore.menu.Dish;
 import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-    private List<String> itemList;
+    private List<Dish> itemList;
     private LayoutInflater layInflater;
     private ItemClickListener clkListener;
 
-    RecyclerViewAdapter(Context context, List<String> data) {
+    RecyclerViewAdapter(Context context, List<Dish> data) {
         this.layInflater = LayoutInflater.from(context);
         this.itemList = data;
     }
@@ -30,8 +31,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int pos) {
-        String dish = itemList.get(pos);
-        holder.myTextView.setText(dish);
+        Dish dish = itemList.get(pos);
+        holder.dishName.setText(dish.getName());
+        holder.dishDesc.setText(dish.getDescription());
     }
 
     @Override
@@ -41,11 +43,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView myTextView;
+
+        TextView dishName;
+        TextView dishDesc;
 
         ViewHolder(View itemView) {
             super(itemView);
-            myTextView = itemView.findViewById(R.id.dish_name);
+            dishName = itemView.findViewById(R.id.dish_name_tv);
+            dishDesc = itemView.findViewById(R.id.dish_desc_tv);
             itemView.setOnClickListener(this);
         }
 
@@ -55,7 +60,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-    String getItem(int id) {
+    Dish getItem(int id) {
         return itemList.get(id);
     }
 

@@ -2,11 +2,13 @@ package com.example.ristoratore.menu;
 
 import android.widget.ImageView;
 
-public class Dish {
+import java.io.Serializable;
+
+public class Dish implements Serializable {
 
     private String name;
     private String description;
-    private ImageView photo;
+    private transient ImageView photo;
     private float price;
     private int available_qty;
 

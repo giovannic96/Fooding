@@ -2,12 +2,10 @@ package com.example.ristoratore;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -35,12 +33,6 @@ public class AddDishActivity extends AppCompatActivity {
     private static final int CAM_REQCODE = 32;
     private static final int STORAGE_PERM_CODE = 33;
 
-    public static final String DISH_NAME_PREFS = "dish_name_prefs";
-    public static final String DISH_DESC_PREFS = "dish_desc_prefs";
-    public static final String DISH_PRICE_PREFS = "dish_price_prefs";
-    public static final String DISH_QTY_PREFS = "dish_qty_prefs";
-    public static final String DISH_PHOTO_PREFS = "dish_photo_prefs";
-
     private Dish dish;
 
     private ImageView photo;
@@ -49,16 +41,11 @@ public class AddDishActivity extends AppCompatActivity {
     private EditText price_et;
     private EditText qty_et;
     private Uri selectedPhoto;
-    SharedPreferences preferences;
-    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dish_descriptor);
-
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        editor = preferences.edit();
 
         photo = findViewById(R.id.dish_photo_iv);
         name_et = findViewById(R.id.dish_name_et);
@@ -67,21 +54,7 @@ public class AddDishActivity extends AppCompatActivity {
         qty_et = findViewById(R.id.dish_qty_et);
         Button save_btn = findViewById(R.id.save_dish_btn);
 
-        if(preferences.contains(DISH_PHOTO_PREFS)) {
-            photo.setImageURI(Uri.parse(preferences.getString(DISH_PHOTO_PREFS, "")));
-            if (photo.getDrawable() == null)
-                photo.setImageResource(R.drawable.ic_launcher_foreground);
-        }
-        if(preferences.contains(DISH_NAME_PREFS))
-            name_et.setText(preferences.getString(DISH_NAME_PREFS, ""));
-        if(preferences.contains(DISH_DESC_PREFS))
-            desc_et.setText(preferences.getString(DISH_DESC_PREFS, ""));
-        if(preferences.contains(DISH_PRICE_PREFS))
-            price_et.setText(String.valueOf(preferences.getFloat(DISH_PRICE_PREFS, 0)));
-        if(preferences.contains(DISH_QTY_PREFS))
-            qty_et.setText(String.valueOf(preferences.getInt(DISH_QTY_PREFS, 0)));
-
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             if(savedInstanceState.containsKey("uri_photo")) {
                 selectedPhoto = savedInstanceState.getParcelable("uri");
                 photo.setImageURI(selectedPhoto);
@@ -102,29 +75,7 @@ public class AddDishActivity extends AppCompatActivity {
             int qty = Integer.parseInt(qty_et.getText().toString());
 
             dish = new Dish(name, description, photo, price, qty);
-            Log.d("MAD-dish", "Created dish: " + dish.getName() + dish.getDescription() +
-                                                dish.getPhoto().toString() + dish.getPrice() + dish.getAvailable_qty());
 
-            if(!(name_et.getText().toString().equals(preferences.getString(DISH_NAME_PREFS, "")))) {
-                editor.putString(DISH_NAME_PREFS, name_et.getText().toString());
-                editor.apply();
-            }
-            if(!(desc_et.getText().toString().equals(preferences.getString(DISH_DESC_PREFS, "")))) {
-                editor.putString(DISH_DESC_PREFS, desc_et.getText().toString());
-                editor.apply();
-            }
-            if(!(Float.parseFloat(price_et.getText().toString()) == preferences.getFloat(DISH_PRICE_PREFS, 0))) {
-                editor.putFloat(DISH_PRICE_PREFS, Float.parseFloat(price_et.getText().toString()));
-                editor.apply();
-            }
-            if(!(Integer.parseInt(qty_et.getText().toString()) == preferences.getInt(DISH_QTY_PREFS, 0))) {
-                editor.putInt(DISH_QTY_PREFS, Integer.parseInt(qty_et.getText().toString()));
-                editor.apply();
-            }
-            if(selectedPhoto != null && !(selectedPhoto.toString().equals(preferences.getString(DISH_PHOTO_PREFS, "")))) {
-                editor.putString(DISH_PHOTO_PREFS, selectedPhoto.toString());
-                editor.apply();
-            }
             finish();
         });
     }
@@ -132,7 +83,7 @@ public class AddDishActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(selectedPhoto != null && !(selectedPhoto.toString().equals(preferences.getString(DISH_PHOTO_PREFS, ""))))
+        if(selectedPhoto != null)
             outState.putParcelable("uri_photo", selectedPhoto);
     }
 
@@ -246,5 +197,13 @@ public class AddDishActivity extends AppCompatActivity {
                     Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    @Override
+    public void finish() {
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("dish_item", dish);
+        setResult(RESULT_OK, returnIntent);
+        super.finish();
     }
 }
