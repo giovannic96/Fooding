@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -48,6 +49,12 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
         Button moveItem_btn = findViewById(R.id.move_dish_btn);
 
         addItem_btn.setOnClickListener(v -> {
+            Intent i = new Intent(getApplicationContext(), AddDishActivity.class);
+            startActivityForResult(i, ADD_ITEM_REQ);
+        });
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(view -> {
             Intent i = new Intent(getApplicationContext(), AddDishActivity.class);
             startActivityForResult(i, ADD_ITEM_REQ);
         });
