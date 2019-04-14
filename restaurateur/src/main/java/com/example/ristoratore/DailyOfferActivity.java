@@ -47,16 +47,10 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
         buildRecyclerView();
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        Button addItem_btn = findViewById(R.id.add_dish_btn);
         Button removeItem_btn = findViewById(R.id.remove_dish_btn);
         Button removeAllItem_btn = findViewById(R.id.removeAll_dish_btn);
         Button updateItem_btn = findViewById(R.id.update_dish_btn);
         Button moveItem_btn = findViewById(R.id.move_dish_btn);
-
-        addItem_btn.setOnClickListener(v -> {
-            Intent i = new Intent(getApplicationContext(), AddDishActivity.class);
-            startActivityForResult(i, ADD_ITEM_REQ);
-        });
 
         fab.setOnClickListener(view -> {
             Intent i = new Intent(getApplicationContext(), AddDishActivity.class);
@@ -155,10 +149,10 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
 
         // set the custom dialog components - texts and image
         TextView name = dialog.findViewById(R.id.dish_name_tv);
-        TextView desc = dialog.findViewById(R.id.dish_desc_tv);
+        //TextView desc = dialog.findViewById(R.id.dish_desc_tv);
         ImageView photo = dialog.findViewById(R.id.dish_photo_rec_iv);
 
-        adapter.setDataToView(name, desc, photo, position);
+        //adapter.setDataToView(name, desc, photo, position);
 
         dialog.show();
     }

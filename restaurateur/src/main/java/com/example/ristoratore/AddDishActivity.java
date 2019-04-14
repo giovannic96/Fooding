@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.blackcat.currencyedittext.CurrencyEditText;
 import com.example.ristoratore.menu.Dish;
 
 import java.io.File;
@@ -38,9 +39,10 @@ public class AddDishActivity extends AppCompatActivity {
     private ImageView photo;
     private EditText name_et;
     private EditText desc_et;
-    private EditText price_et;
+    private CurrencyEditText price_et;
     private EditText qty_et;
     private Uri selectedPhoto;
+    private Button add_image_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,7 @@ public class AddDishActivity extends AppCompatActivity {
         desc_et = findViewById(R.id.dish_desc_et);
         price_et = findViewById(R.id.dish_price_et);
         qty_et = findViewById(R.id.dish_qty_et);
+        add_image_btn = findViewById(R.id.add_image_btn);
         Button save_btn = findViewById(R.id.save_dish_btn);
 
         if (savedInstanceState != null) {
@@ -61,7 +64,7 @@ public class AddDishActivity extends AppCompatActivity {
             }
         }
 
-        photo.setOnClickListener(e -> {
+        add_image_btn.setOnClickListener(e -> {
             if(isStoragePermissionGranted()) { /* TO-DO : check if before I had permissions !!!!!!!!!!!!!!!!!!!!! */
                 selectImage();
             }
@@ -71,7 +74,7 @@ public class AddDishActivity extends AppCompatActivity {
             String name = name_et.getText().toString();
             String description = desc_et.getText().toString();
             ImageView photo = this.photo;
-            float price = Float.parseFloat(price_et.getText().toString());
+            String price = price_et.formatCurrency(price_et.getRawValue());
             int qty = Integer.parseInt(qty_et.getText().toString());
 
             dish = new Dish(name, description, photo, price, qty, selectedPhoto != null ? selectedPhoto.toString() : "");

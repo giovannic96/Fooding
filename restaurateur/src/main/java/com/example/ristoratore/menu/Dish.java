@@ -9,11 +9,11 @@ public class Dish implements Serializable {
     private String name;
     private String description;
     private transient ImageView photo;
-    private float price;
+    private String price;
     private int available_qty;
     private String photoUri;
 
-    public Dish(String name, String description, ImageView photo, float price, int available_qty, String photoUri) {
+    public Dish(String name, String description, ImageView photo, String price, int available_qty, String photoUri) {
         this.name = name;
         this.description = description;
         this.photo = photo;
@@ -54,11 +54,11 @@ public class Dish implements Serializable {
         this.photo = photo;
     }
 
-    public float getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 

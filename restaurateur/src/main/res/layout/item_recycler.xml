@@ -22,25 +22,36 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:layout_marginStart="60dp"
+            android:layout_marginStart="55dp"
             android:layout_marginTop="10dp">
 
             <TextView
                 android:id="@+id/dish_name_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pasta alla carbonara"
-                android:textSize="24sp"
-                android:textColor="@android:color/black" />
+                android:text="OCCCCCCCCCCCCCCCCfCCCCCCCCCCCCCCCCCCCCC"
+                android:textSize="23sp"
+                android:layout_marginEnd="15dp"
+                android:textColor="@android:color/black"
+                android:maxLines="2"
+                android:maxLength="40"
+                android:ellipsize="end" />
 
             <TextView
-                android:id="@+id/dish_desc_tv"
+                android:id="@+id/dish_price_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/dish_name_tv"
-                android:text="Questa è la descrizione della pasta"
-                android:textSize="15sp"
-                android:textColor="@android:color/secondary_text_dark"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:gravity="bottom|end"
+                android:layout_marginEnd="15dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="2dp"
+                android:text="7.48€"
+                android:textSize="18sp"
+                android:textColor="@color/colorAccentLight"
                 android:textStyle="bold" />
 
         </RelativeLayout>

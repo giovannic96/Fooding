@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginTop="20dp"
     android:layout_marginBottom="20dp"
     android:layout_marginStart="16dp"
@@ -14,14 +15,31 @@
     android:gravity="center"
     android:padding="20dp">
 
-    <ImageView
-        android:id="@+id/dish_photo_iv"
-        android:layout_width="225dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/dish_photo"
-        android:src="@drawable/ic_restaurant_red" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/dish_photo_iv"
+            android:layout_width="225dp"
+            android:layout_height="225dp"
+            android:layout_marginBottom="20dp"
+            android:contentDescription="@string/dish_photo"
+            android:src="@mipmap/paella_256" />
+
+        <Button
+            android:id="@+id/add_image_btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom|end"
+            android:layout_alignEnd="@id/dish_photo_iv"
+            android:layout_alignBottom="@+id/dish_photo_iv"
+            android:background="@drawable/circle"
+            android:clickable="true"
+            android:focusable="true"
+            android:drawableTop="@mipmap/icons8_add_image_36"
+            android:elevation="4dp"
+            android:paddingTop="10dp" />
+    </RelativeLayout>
 
     <EditText
         android:id="@+id/dish_name_et"
@@ -41,14 +59,17 @@
         android:inputType="text"
         android:textAppearance="@android:style/TextAppearance.Material.Large" />
 
-    <EditText
+    <com.blackcat.currencyedittext.CurrencyEditText
         android:id="@+id/dish_price_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:hint="@string/dish_price"
+        android:hint=""
+        android:textColor="#808080"
         android:inputType="number"
-        android:textAppearance="@android:style/TextAppearance.Material.Large" />
+        android:maxLength="12"
+        android:textAppearance="@android:style/TextAppearance.Material.Large"
+        app:allow_negative_values="false" />
 
     <EditText
         android:id="@+id/dish_qty_et"

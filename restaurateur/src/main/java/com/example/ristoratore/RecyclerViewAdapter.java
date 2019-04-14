@@ -19,12 +19,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<Dish> itemList;
     private LayoutInflater layInflater;
     private ItemClickListener clkListener;
-    private Typeface roboto;
+    private Typeface robotoItalic, robotoBold;
 
     RecyclerViewAdapter(Context context, List<Dish> data) {
         this.layInflater = LayoutInflater.from(context);
         this.itemList = data;
-        roboto = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
+        robotoItalic = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Italic.ttf");
+        robotoBold = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-BoldItalic.ttf");
     }
 
     @NonNull
@@ -38,11 +39,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int pos) {
         Dish dish = itemList.get(pos);
 
-        holder.dishName.setTypeface(roboto);
+        holder.dishName.setTypeface(robotoItalic);
         holder.dishName.setText(dish.getName());
 
-        holder.dishDesc.setTypeface(roboto);
-        holder.dishDesc.setText(dish.getDescription());
+        holder.dishPrice.setTypeface(robotoBold);
+        holder.dishPrice.setText(dish.getPrice());
 
         if(dish.getPhotoUri() != null && !dish.getPhotoUri().equals(""))
             holder.dishPhoto.setImageURI(Uri.parse(dish.getPhotoUri()));
@@ -51,10 +52,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     protected void setDataToView(TextView name, TextView desc, ImageView photo, int pos) {
         Dish dish = itemList.get(pos);
 
-        name.setTypeface(roboto);
+        name.setTypeface(robotoItalic);
         name.setText(dish.getName());
 
-        desc.setTypeface(roboto);
+        desc.setTypeface(robotoItalic);
         desc.setText(dish.getDescription());
 
         if(dish.getPhotoUri() != null && !dish.getPhotoUri().equals(""))
@@ -72,12 +73,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ImageView dishPhoto;
         TextView dishName;
         TextView dishDesc;
+        TextView dishPrice;
 
         ViewHolder(View itemView) {
             super(itemView);
             dishPhoto = itemView.findViewById(R.id.dish_photo_rec_iv);
             dishName = itemView.findViewById(R.id.dish_name_tv);
-            dishDesc = itemView.findViewById(R.id.dish_desc_tv);
+            dishPrice = itemView.findViewById(R.id.dish_price_tv);
+            //dishDesc = itemView.findViewById(R.id.dish_desc_tv);
             itemView.setOnClickListener(this);
         }
 
