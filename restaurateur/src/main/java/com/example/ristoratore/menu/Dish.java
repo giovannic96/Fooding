@@ -11,13 +11,23 @@ public class Dish implements Serializable {
     private transient ImageView photo;
     private float price;
     private int available_qty;
+    private String photoUri;
 
-    public Dish(String name, String description, ImageView photo, float price, int available_qty) {
+    public Dish(String name, String description, ImageView photo, float price, int available_qty, String photoUri) {
         this.name = name;
         this.description = description;
         this.photo = photo;
         this.price = price;
         this.available_qty = available_qty;
+        this.photoUri = photoUri;
+    }
+
+    public String getPhotoUri() {
+        return photoUri;
+    }
+
+    public void setPhotoUri(String photoUri) {
+        this.photoUri = photoUri;
     }
 
     public String getDescription() {

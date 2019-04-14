@@ -74,7 +74,7 @@ public class AddDishActivity extends AppCompatActivity {
             float price = Float.parseFloat(price_et.getText().toString());
             int qty = Integer.parseInt(qty_et.getText().toString());
 
-            dish = new Dish(name, description, photo, price, qty);
+            dish = new Dish(name, description, photo, price, qty, selectedPhoto != null ? selectedPhoto.toString() : "");
 
             finish();
         });

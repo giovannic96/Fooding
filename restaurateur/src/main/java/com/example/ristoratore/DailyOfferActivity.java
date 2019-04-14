@@ -1,16 +1,19 @@
 package com.example.ristoratore;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 
@@ -18,6 +21,8 @@ import com.example.ristoratore.menu.Dish;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
+
+import static com.example.ristoratore.EditActivity.URI_PREFS;
 
 @SuppressLint("Registered")
 public class DailyOfferActivity extends AppCompatActivity implements RecyclerViewAdapter.ItemClickListener {
@@ -31,7 +36,6 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
     private RecyclerView rView;
     private RecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager rLayoutManager;
-    private DividerItemDecoration divider;
     ArrayList<Dish> dishes;
 
     @Override
@@ -42,6 +46,7 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
         loadData();
         buildRecyclerView();
 
+        FloatingActionButton fab = findViewById(R.id.fab);
         Button addItem_btn = findViewById(R.id.add_dish_btn);
         Button removeItem_btn = findViewById(R.id.remove_dish_btn);
         Button removeAllItem_btn = findViewById(R.id.removeAll_dish_btn);
@@ -53,19 +58,18 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
             startActivityForResult(i, ADD_ITEM_REQ);
         });
 
-        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
             Intent i = new Intent(getApplicationContext(), AddDishActivity.class);
             startActivityForResult(i, ADD_ITEM_REQ);
         });
 
-        /*
+
         removeItem_btn.setOnClickListener(v -> {
             int removeIndex = 2;
             dishes.remove(removeIndex);
             adapter.notifyItemRemoved(removeIndex);
         });
-
+        /*
         removeAllItem_btn.setOnClickListener(v -> {
             dishes.clear();
             adapter.notifyDataSetChanged();
@@ -127,13 +131,11 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
 
     private void buildRecyclerView() {
         rView = findViewById(R.id.dishes_rView);
-        divider = new DividerItemDecoration(rView.getContext(), new LinearLayoutManager(this).getOrientation());
         rLayoutManager = new LinearLayoutManager(this);
         rView.setLayoutManager(rLayoutManager);
         adapter = new RecyclerViewAdapter(this, dishes);
         adapter.setClickListener(this);
         rView.setAdapter(adapter);
-        rView.addItemDecoration(divider);
     }
 
     @Override
@@ -146,5 +148,18 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
     @Override
     public void onItemClick(View view, int position) {
         Toast.makeText(this, "Clicked " + adapter.getItem(position).getName() + " on position " + position, Toast.LENGTH_SHORT).show();
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.item_recycler);
+        dialog.setTitle("Position " + position);
+        dialog.setCancelable(true);
+
+        // set the custom dialog components - texts and image
+        TextView name = dialog.findViewById(R.id.dish_name_tv);
+        TextView desc = dialog.findViewById(R.id.dish_desc_tv);
+        ImageView photo = dialog.findViewById(R.id.dish_photo_rec_iv);
+
+        adapter.setDataToView(name, desc, photo, position);
+
+        dialog.show();
     }
 }
