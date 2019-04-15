@@ -11,10 +11,10 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="124dp"
         android:layout_marginBottom="6dp"
         android:layout_marginStart="50dp"
-        app:cardCornerRadius="4dp"
+        app:cardCornerRadius="22dp"
         app:cardElevation="4dp"
         app:cardUseCompatPadding="false">
 
@@ -22,8 +22,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:layout_marginStart="55dp"
-            android:layout_marginTop="10dp">
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="14dp">
 
             <TextView
                 android:id="@+id/dish_name_tv"
@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:text="OCCCCCCCCCCCCCCCCfCCCCCCCCCCCCCCCCCCCCC"
                 android:textSize="23sp"
-                android:layout_marginEnd="15dp"
+                android:layout_marginEnd="22dp"
                 android:textColor="@android:color/black"
                 android:maxLines="2"
                 android:maxLength="40"
@@ -59,9 +59,9 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/dish_photo_rec_iv"
-        android:layout_width="100dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="110dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="18dp"
         android:src="@mipmap/icons8_spaghetti_96"
         android:elevation="8dp"
         app:civ_fill_color="#FFFFFF"/>
