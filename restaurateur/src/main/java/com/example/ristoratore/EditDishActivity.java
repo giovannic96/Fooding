@@ -18,6 +18,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blackcat.currencyedittext.CurrencyEditText;
@@ -28,7 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
-public class AddDishActivity extends AppCompatActivity {
+public class EditDishActivity extends AppCompatActivity {
 
     private static final int GALLERY_REQCODE = 31;
     private static final int CAM_REQCODE = 32;
@@ -47,6 +48,7 @@ public class AddDishActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.dish_descriptor);
 
         photo = findViewById(R.id.dish_photo_iv);
@@ -71,21 +73,27 @@ public class AddDishActivity extends AppCompatActivity {
         });
 
         save_btn.setOnClickListener(v -> {
-            String name = name_et.getText().toString();
+            /*String name = name_et.getText().toString();
             String description = desc_et.getText().toString();
             ImageView photo = this.photo;
-            Long pricel = price_et.getRawValue();
             String price = price_et.formatCurrency(price_et.getRawValue());
-            int qty;
-            if(qty_et.getText().toString().matches("^-?\\d+$"))
-                qty = Integer.parseInt(qty_et.getText().toString());
-            else
-                qty = 1;
+            int qty = Integer.parseInt(qty_et.getText().toString());
 
-            dish = new Dish(name, description, photo, price, pricel, qty, selectedPhoto != null ? selectedPhoto.toString() : "");
-
+            dish = new Dish(name, description, photo, price, qty, selectedPhoto != null ? selectedPhoto.toString() : "");
+            */
             finish();
         });
+
+        Intent i=getIntent();
+        Dish d=(Dish)i.getSerializableExtra("dish");
+        if(d.getPhotoUri() != null && !d.getPhotoUri().equals(""))
+            photo.setImageURI(Uri.parse(d.getPhotoUri()));
+
+        name_et.setText(d.getName(), TextView.BufferType.EDITABLE);
+        desc_et.setText(d.getDescription(), TextView.BufferType.EDITABLE);
+        price_et.setValue(d.getPriceL());
+        qty_et.setText(String.valueOf(d.getAvailable_qty()), TextView.BufferType.EDITABLE);
+
     }
 
     @Override
@@ -110,7 +118,7 @@ public class AddDishActivity extends AppCompatActivity {
 
     private void selectImage() {
         final CharSequence[] items = { "Take Photo", "Choose from Library", "Cancel" };
-        AlertDialog.Builder builder = new AlertDialog.Builder(AddDishActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(EditDishActivity.this);
         builder.setTitle("Add Photo!");
         builder.setItems(items, (dialog, item) -> {
             if (items[item].equals("Take Photo")) {
@@ -136,7 +144,7 @@ public class AddDishActivity extends AppCompatActivity {
     private void cameraIntent() {
         Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        selectedPhoto = FileProvider.getUriForFile(AddDishActivity.this, BuildConfig.APPLICATION_ID + ".provider", Objects.requireNonNull(getOutputMediaFile()));
+        selectedPhoto = FileProvider.getUriForFile(EditDishActivity.this, BuildConfig.APPLICATION_ID + ".provider", Objects.requireNonNull(getOutputMediaFile()));
         takePicture.putExtra(MediaStore.EXTRA_OUTPUT, selectedPhoto);
         takePicture.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
@@ -178,7 +186,7 @@ public class AddDishActivity extends AppCompatActivity {
     }
 
     private boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(AddDishActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int result = ContextCompat.checkSelfPermission(EditDishActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
         return result == PackageManager.PERMISSION_GRANTED;
     }
 
@@ -187,7 +195,7 @@ public class AddDishActivity extends AppCompatActivity {
             new AlertDialog.Builder(this)
                     .setTitle("Permission needed")
                     .setMessage("This permission is needed to store images")
-                    .setPositiveButton("Ok", (dialog, which) -> ActivityCompat.requestPermissions(AddDishActivity.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERM_CODE))
+                    .setPositiveButton("Ok", (dialog, which) -> ActivityCompat.requestPermissions(EditDishActivity.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERM_CODE))
                     .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
                     .create().show();
         } else {
@@ -209,9 +217,9 @@ public class AddDishActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
-        Intent returnIntent = new Intent();
+        /*Intent returnIntent = new Intent();
         returnIntent.putExtra("dish_item", dish);
-        setResult(RESULT_OK, returnIntent);
+        setResult(RESULT_OK, returnIntent);*/
         super.finish();
     }
 }
