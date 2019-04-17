@@ -21,4 +21,5 @@
     <string name="dish_price">Price</string>
     <string name="dish_qty">Available quantity</string>
     <string name="dish_photo">Dish photo</string>
+    <string name="delete_btn">Delete</string>
 </resources>
