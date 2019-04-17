@@ -28,7 +28,9 @@ import static com.example.ristoratore.EditActivity.URI_PREFS;
 public class DailyOfferActivity extends AppCompatActivity implements RecyclerViewAdapter.ItemClickListener {
 
     private static final int ADD_ITEM_REQ = 40;
-
+    private static final int EDIT_ITEM_REQ = 41;
+    private static final int RESULT_SAVE = 34;
+    private static final int RESULT_DELETE = 35;
     SharedPreferences preferences;
     private static final String PREF_NAME = "DishList sp";
     private static final String DISHLIST_NAME = "Dishes List";
@@ -47,23 +49,23 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
         buildRecyclerView();
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        Button removeItem_btn = findViewById(R.id.remove_dish_btn);
+        /*Button removeItem_btn = findViewById(R.id.remove_dish_btn);
         Button removeAllItem_btn = findViewById(R.id.removeAll_dish_btn);
         Button updateItem_btn = findViewById(R.id.update_dish_btn);
-        Button moveItem_btn = findViewById(R.id.move_dish_btn);
+        Button moveItem_btn = findViewById(R.id.move_dish_btn);*/
 
         fab.setOnClickListener(view -> {
             Intent i = new Intent(getApplicationContext(), AddDishActivity.class);
             startActivityForResult(i, ADD_ITEM_REQ);
         });
 
-
+        /*
         removeItem_btn.setOnClickListener(v -> {
             int removeIndex = 2;
             dishes.remove(removeIndex);
             adapter.notifyItemRemoved(removeIndex);
         });
-        /*
+
         removeAllItem_btn.setOnClickListener(v -> {
             dishes.clear();
             adapter.notifyDataSetChanged();
@@ -99,6 +101,22 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
                 adapter.notifyItemInserted(dishes.size());
                 saveData();
             }
+        }
+        else if (requestCode == EDIT_ITEM_REQ && resultCode == RESULT_SAVE){
+            Dish itemReturned = (Dish) data.getSerializableExtra("dish_item");
+            int position = data.getIntExtra("position", 0);
+            if(itemReturned != null){
+                dishes.set(position, itemReturned);
+                adapter.notifyItemChanged(position);
+                saveData();
+
+            }
+        }
+        else if (requestCode == EDIT_ITEM_REQ && resultCode == RESULT_DELETE){
+            int position = data.getIntExtra("position", 0);
+            dishes.remove(position);
+            adapter.notifyItemRemoved(position);
+            saveData();
         }
     }
 
@@ -141,7 +159,9 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(this, "Clicked " + adapter.getItem(position).getName() + " on position " + position, Toast.LENGTH_SHORT).show();
+        /* OLD VERSION */
+        /*
+        //Toast.makeText(this, "Clicked " + adapter.getItem(position).getName() + " on position " + position, Toast.LENGTH_SHORT).show();
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.item_recycler);
         dialog.setTitle("Position " + position);
@@ -149,11 +169,22 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
 
         // set the custom dialog components - texts and image
         TextView name = dialog.findViewById(R.id.dish_name_tv);
-        //TextView desc = dialog.findViewById(R.id.dish_desc_tv);
+        TextView price= dialog.findViewById(R.id.dish_price_tv);
+        TextView desc = dialog.findViewById(R.id.dish_desc_tv);
         ImageView photo = dialog.findViewById(R.id.dish_photo_rec_iv);
 
-        //adapter.setDataToView(name, desc, photo, position);
+        adapter.setDataToView(name, photo, price, desc, position);
 
         dialog.show();
+        */
+
+        Intent i = new Intent(getApplicationContext(), EditDishActivity.class);
+        i.putExtra("dish", adapter.getItem(position));
+        i.putExtra("position", position);
+        startActivityForResult(i, EDIT_ITEM_REQ);
+
+
+
+
     }
 }
