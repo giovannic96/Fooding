@@ -22,4 +22,6 @@
     <string name="dish_qty">Available quantity</string>
     <string name="dish_photo">Dish photo</string>
     <string name="delete_btn">Delete</string>
+    <string name="drawer_open">drawer open</string>
+    <string name="drawer_close">drawer close</string>
 </resources>
