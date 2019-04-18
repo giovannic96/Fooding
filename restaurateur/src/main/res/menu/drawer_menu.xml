@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/profile_btn"
+            android:title="@string/profile_btn"></item>
+        <item
+            android:id="@+id/dailyoffer_btn"
+            android:title="@string/dailyoffer_btn"></item>
+        <item
+            android:id="@+id/order_btn"
+            android:title="@string/orders_btn"></item>
+    </group>
+</menu>

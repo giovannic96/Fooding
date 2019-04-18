@@ -45,15 +45,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.dishPrice.setTypeface(robotoBold);
         holder.dishPrice.setText(dish.getPrice());
 
+        holder.dishDesc.setTypeface(robotoBold);
+        holder.dishDesc.setText(dish.getDescription());
+
         if(dish.getPhotoUri() != null && !dish.getPhotoUri().equals(""))
             holder.dishPhoto.setImageURI(Uri.parse(dish.getPhotoUri()));
     }
 
-    protected void setDataToView(TextView name, TextView desc, ImageView photo, int pos) {
+    protected void setDataToView(TextView name, ImageView photo, TextView price, TextView desc, int pos) {
         Dish dish = itemList.get(pos);
 
         name.setTypeface(robotoItalic);
         name.setText(dish.getName());
+
+        price.setTypeface(robotoItalic);
+        price.setText(dish.getPrice());
 
         desc.setTypeface(robotoItalic);
         desc.setText(dish.getDescription());
@@ -80,7 +86,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             dishPhoto = itemView.findViewById(R.id.dish_photo_rec_iv);
             dishName = itemView.findViewById(R.id.dish_name_tv);
             dishPrice = itemView.findViewById(R.id.dish_price_tv);
-            //dishDesc = itemView.findViewById(R.id.dish_desc_tv);
+            dishDesc = itemView.findViewById(R.id.dish_desc_tv);
             itemView.setOnClickListener(this);
         }
 

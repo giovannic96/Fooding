@@ -18,7 +18,7 @@
         android:layout_width="160dp"
         android:layout_height="160dp"
         android:contentDescription="@string/photo"
-        android:src="@drawable/ic_launcher_foreground"
+        android:src="@mipmap/chef_256"
         ristoratore:civ_border_color="#d1b1b1"
         ristoratore:civ_fill_color="@color/colorAccent"
         android:foregroundGravity="center"
