@@ -13,6 +13,8 @@ public class Dish implements Serializable {
     private int available_qty;
     private String photoUri;
 
+    private boolean expanded;
+
     public Dish(String name, String description, ImageView photo, String price, int available_qty, String photoUri) {
         this.name = name;
         this.description = description;
@@ -20,6 +22,14 @@ public class Dish implements Serializable {
         this.price = price;
         this.available_qty = available_qty;
         this.photoUri = photoUri;
+    }
+
+    public boolean isExpanded() {
+        return expanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
     }
 
     public String getPhotoUri() {

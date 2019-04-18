@@ -7,10 +7,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -47,23 +50,24 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
         buildRecyclerView();
 
         FloatingActionButton fab = findViewById(R.id.fab);
+        /*
         Button removeItem_btn = findViewById(R.id.remove_dish_btn);
         Button removeAllItem_btn = findViewById(R.id.removeAll_dish_btn);
         Button updateItem_btn = findViewById(R.id.update_dish_btn);
         Button moveItem_btn = findViewById(R.id.move_dish_btn);
-
+        */
         fab.setOnClickListener(view -> {
             Intent i = new Intent(getApplicationContext(), AddDishActivity.class);
             startActivityForResult(i, ADD_ITEM_REQ);
         });
 
-
+        /*
         removeItem_btn.setOnClickListener(v -> {
             int removeIndex = 2;
             dishes.remove(removeIndex);
             adapter.notifyItemRemoved(removeIndex);
         });
-        /*
+
         removeAllItem_btn.setOnClickListener(v -> {
             dishes.clear();
             adapter.notifyDataSetChanged();
@@ -142,6 +146,7 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
     @Override
     public void onItemClick(View view, int position) {
         Toast.makeText(this, "Clicked " + adapter.getItem(position).getName() + " on position " + position, Toast.LENGTH_SHORT).show();
+        /*
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.item_recycler);
         dialog.setTitle("Position " + position);
@@ -155,5 +160,6 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
         //adapter.setDataToView(name, desc, photo, position);
 
         dialog.show();
+        */
     }
 }

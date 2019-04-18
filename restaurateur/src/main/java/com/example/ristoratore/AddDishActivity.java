@@ -65,7 +65,7 @@ public class AddDishActivity extends AppCompatActivity {
         }
 
         add_image_btn.setOnClickListener(e -> {
-            if(isStoragePermissionGranted()) { /* TO-DO : check if before I had permissions !!!!!!!!!!!!!!!!!!!!! */
+            if(isStoragePermissionGranted()) {
                 selectImage();
             }
         });
