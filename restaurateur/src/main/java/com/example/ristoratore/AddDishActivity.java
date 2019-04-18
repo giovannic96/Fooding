@@ -18,7 +18,9 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blackcat.currencyedittext.CurrencyEditText;
@@ -41,9 +43,11 @@ public class AddDishActivity extends AppCompatActivity {
     private EditText name_et;
     private EditText desc_et;
     private CurrencyEditText price_et;
-    private EditText qty_et;
+    private TextView qty_et;
     private Uri selectedPhoto;
     private Button add_image_btn;
+    private ImageButton plus_btn;
+    private ImageButton negative_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,9 @@ public class AddDishActivity extends AppCompatActivity {
         qty_et = findViewById(R.id.dish_qty_et);
         add_image_btn = findViewById(R.id.add_image_btn);
         Button save_btn = findViewById(R.id.save_dish_btn);
+        plus_btn = findViewById(R.id.plus_btn);
+        negative_btn = findViewById(R.id.negative_btn);
+
 
         if (savedInstanceState != null) {
             if(savedInstanceState.containsKey("uri_photo")) {
@@ -72,6 +79,25 @@ public class AddDishActivity extends AppCompatActivity {
             if(isStoragePermissionGranted()) { /* TO-DO : check if before I had permissions !!!!!!!!!!!!!!!!!!!!! */
                 selectImage();
             }
+        });
+
+        plus_btn.setOnClickListener(e-> {
+            String value=qty_et.getText().toString();
+            Integer val= Integer.parseInt(value);
+            val=new Integer(val.intValue()+1);
+            qty_et.setText(val.toString());
+        });
+
+        negative_btn.setOnClickListener(e-> {
+            String value=qty_et.getText().toString();
+            Integer val= Integer.parseInt(value);
+
+            if(!val.equals(0))
+            {
+                val=new Integer(val.intValue()-1);
+                qty_et.setText(val.toString());
+            }
+
         });
 
         save_btn.setOnClickListener(v -> {
