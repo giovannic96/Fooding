@@ -14,13 +14,9 @@ public class Dish implements Serializable {
     private String photoUri;
     private long priceL;
 
-<<<<<<< HEAD
     private boolean expanded;
-
-    public Dish(String name, String description, ImageView photo, String price, int available_qty, String photoUri) {
-=======
+    
     public Dish(String name, String description, ImageView photo, String price, Long priceL, int available_qty, String photoUri) {
->>>>>>> 1e35a23dc8c5f654dd9694639c212d035c69bb07
         this.name = name;
         this.description = description;
         this.photo = photo;
