@@ -43,6 +43,7 @@ public class EditActivity extends AppCompatActivity {
     public static final String INFO_PREFS = "info_prefs";
 
     private CircleImageView avatar;
+    private Button addImage;
     private Button save_btn;
     private EditText name_et;
     private EditText addr_et;
@@ -72,6 +73,7 @@ public class EditActivity extends AppCompatActivity {
         mail_et = findViewById(R.id.mail_et);
         hour_et = findViewById(R.id.hour_et);
         info_et = findViewById(R.id.info_et);
+        addImage = findViewById(R.id.add_image_btn);
 
         if(preferences.contains(EditActivity.URI_PREFS)) {
             avatar.setImageURI(Uri.parse(preferences.getString(EditActivity.URI_PREFS, "")));
@@ -99,7 +101,7 @@ public class EditActivity extends AppCompatActivity {
             }
         }
 
-        avatar.setOnClickListener(e -> {
+        addImage.setOnClickListener(e -> {
             if(isStoragePermissionGranted()) {
                 selectImage();
             }

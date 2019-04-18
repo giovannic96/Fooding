@@ -47,7 +47,7 @@ public class ProfileActivity extends AppCompatActivity {
         if(preferences.contains(EditActivity.URI_PREFS)) {
             avatar.setImageURI(Uri.parse(preferences.getString(EditActivity.URI_PREFS, "")));
             if(avatar.getDrawable() == null)
-                avatar.setImageResource(R.drawable.ic_launcher_foreground);
+                avatar.setImageResource(R.mipmap.chef_256);
         }
         if(preferences.contains(EditActivity.NAME_PREFS))
             name_tv.setText(preferences.getString(EditActivity.NAME_PREFS, ""));

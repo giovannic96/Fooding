@@ -10,20 +10,32 @@
     android:layout_marginStart="16dp"
     android:layout_marginEnd="16dp">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        xmlns:ristoratore="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/avatar"
-        android:layout_marginTop="20dp"
-        android:clickable="true"
-        android:layout_gravity="center"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:contentDescription="@string/photo"
-        android:src="@drawable/ic_launcher_foreground"
-        ristoratore:civ_border_color="#d1b1b1"
-        ristoratore:civ_fill_color="@color/colorAccent"
-        android:foregroundGravity="center"
-        android:focusable="true" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/avatar"
+            android:layout_width="225dp"
+            android:layout_height="225dp"
+            android:layout_marginBottom="20dp"
+            android:src="@mipmap/chef_256" />
+
+        <Button
+            android:id="@+id/add_image_btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignEnd="@id/avatar"
+            android:layout_alignBottom="@+id/avatar"
+            android:layout_gravity="bottom|end"
+            android:background="@drawable/circle"
+            android:clickable="true"
+            android:drawableTop="@mipmap/icons8_add_image_36"
+            android:elevation="4dp"
+            android:focusable="true"
+            android:paddingTop="10dp" />
+    </RelativeLayout>
     <EditText
         android:id="@+id/name_et"
         android:layout_width="match_parent"
