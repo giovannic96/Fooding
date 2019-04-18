@@ -85,7 +85,7 @@
                 android:layout_marginStart="0dp"
                 android:layout_marginTop="0dp"
                 android:gravity="center"
-                android:text="Select Quantitiy" />
+                android:text="@string/select_qty" />
 
             <EditText
                 android:id="@+id/dish_qty_et"
