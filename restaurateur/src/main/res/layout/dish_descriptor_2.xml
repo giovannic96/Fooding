@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:hint="@string/dish_name"
-            android:inputType="text"
+            android:inputType="textCapSentences|textMultiLine"
             android:textAppearance="@android:style/TextAppearance.Material.Large" />
 
         <EditText
@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:hint="@string/dish_desc"
-            android:inputType="text"
+            android:inputType="textCapSentences|textMultiLine"
             android:textAppearance="@android:style/TextAppearance.Material.Large" />
 
         <com.blackcat.currencyedittext.CurrencyEditText
@@ -87,7 +87,7 @@
                 android:gravity="center"
                 android:text="Select Quantitiy" />
 
-            <TextView
+            <EditText
                 android:id="@+id/dish_qty_et"
                 android:layout_width="130dp"
                 android:layout_height="55dp"
@@ -111,6 +111,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="24dp"
                 android:adjustViewBounds="true"
+                android:background="#fafafa"
                 android:scaleType="fitCenter"
                 app:srcCompat="@mipmap/plus_green" />
 
@@ -123,6 +124,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="98dp"
                 android:adjustViewBounds="true"
+                android:background="#fafafa"
                 android:scaleType="fitCenter"
                 app:srcCompat="@mipmap/negative_red" />
         </RelativeLayout>

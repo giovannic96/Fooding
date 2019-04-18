@@ -14,6 +14,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -43,7 +44,7 @@ public class AddDishActivity extends AppCompatActivity {
     private EditText name_et;
     private EditText desc_et;
     private CurrencyEditText price_et;
-    private TextView qty_et;
+    private EditText qty_et;
     private Uri selectedPhoto;
     private Button add_image_btn;
     private ImageButton plus_btn;
@@ -66,6 +67,9 @@ public class AddDishActivity extends AppCompatActivity {
         Button save_btn = findViewById(R.id.save_dish_btn);
         plus_btn = findViewById(R.id.plus_btn);
         negative_btn = findViewById(R.id.negative_btn);
+
+        name_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        desc_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
 
 
         if (savedInstanceState != null) {

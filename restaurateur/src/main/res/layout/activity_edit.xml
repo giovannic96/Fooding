@@ -40,7 +40,7 @@
         android:id="@+id/name_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
+        android:inputType="textCapSentences|textMultiLine"
         android:hint="@string/cust_name"
         android:layout_marginTop="40dp"
         />
@@ -48,7 +48,7 @@
         android:id="@+id/address_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textVisiblePassword"
+        android:inputType="textCapSentences|textMultiLine"
         android:hint="@string/cust_addr"
         android:layout_marginTop="25dp"
         />
@@ -64,7 +64,7 @@
         android:id="@+id/mail_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
+        android:inputType="textCapSentences|textMultiLine"
         android:hint="@string/cust_mail"
         android:layout_marginTop="25dp"
         />
@@ -72,7 +72,7 @@
         android:id="@+id/hour_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
+        android:inputType="textCapSentences|textMultiLine"
         android:hint="@string/cust_hour"
         android:layout_marginTop="25dp"
         />
@@ -80,7 +80,7 @@
         android:id="@+id/info_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
+        android:inputType="textCapSentences|textMultiLine"
         android:hint="@string/cust_info"
         android:layout_marginTop="25dp"
         />
