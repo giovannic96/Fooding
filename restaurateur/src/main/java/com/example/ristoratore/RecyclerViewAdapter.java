@@ -14,6 +14,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.AdapterView;
 
 import com.example.ristoratore.menu.Dish;
 import java.util.List;
@@ -24,6 +25,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private LayoutInflater layInflater;
     private ItemClickListener clkListener;
     private Typeface robotoRegular, robotoBold;
+    private ItemLongClickListener longClkListener;
 
     RecyclerViewAdapter(Context context, List<Dish> data) {
         this.layInflater = LayoutInflater.from(context);
@@ -80,29 +82,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         });
     }
 
-    protected void setDataToView(TextView name, ImageView photo, TextView price, TextView desc, int pos) {
-        Dish dish = itemList.get(pos);
-
-        name.setTypeface(robotoRegular);
-        name.setText(dish.getName());
-
-        price.setTypeface(robotoRegular);
-        price.setText(dish.getPrice());
-
-        desc.setTypeface(robotoRegular);
-        desc.setText(dish.getDescription());
-
-        if(dish.getPhotoUri() != null && !dish.getPhotoUri().equals(""))
-            photo.setImageURI(Uri.parse(dish.getPhotoUri()));
-    }
-
     @Override
     public int getItemCount() {
         return itemList.size();
     }
 
     // stores and recycles views as they are scrolled off screen
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         ImageView dishPhoto;
         TextView dishName;
@@ -121,11 +107,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             dishPrice = itemView.findViewById(R.id.dish_price_tv);
             dishDesc = itemView.findViewById(R.id.dish_desc_tv);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
             if (clkListener != null) clkListener.onItemClick(view, getAdapterPosition());
+        }
+
+        @Override
+        public boolean onLongClick(View view){
+            if(longClkListener != null) longClkListener.onItemLongClick(view, getAdapterPosition());
+            return false;
         }
     }
 
@@ -138,9 +131,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.clkListener = itemClickListener;
     }
 
+    void setLongClkListener(ItemLongClickListener longClkLister){
+        this.longClkListener = longClkLister;
+    }
+
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
         void onItemClick(View view, int position);
+    }
+
+    public interface ItemLongClickListener {
+        void onItemLongClick(View view, int position);
     }
 }
 

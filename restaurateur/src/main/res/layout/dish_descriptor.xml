@@ -104,12 +104,12 @@
 
         <ImageButton
             android:id="@+id/plus_btn"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginTop="29dp"
+            android:layout_marginEnd="59dp"
             android:adjustViewBounds="true"
             android:background="#fafafa"
             android:scaleType="fitCenter"
@@ -117,26 +117,17 @@
 
         <ImageButton
             android:id="@+id/negative_btn"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="98dp"
+            android:layout_marginTop="29dp"
+            android:layout_marginEnd="119dp"
             android:adjustViewBounds="true"
             android:background="#fafafa"
             android:scaleType="fitCenter"
             app:srcCompat="@mipmap/negative_red" />
     </RelativeLayout>
-
-    <!--<EditText
-        android:id="@+id/dish_qty_et"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:inputType="number"
-        android:hint="@string/dish_qty"
-        android:textAppearance="@android:style/TextAppearance.Material.Large" />-->
 
     <Button
         android:id="@+id/save_dish_btn"

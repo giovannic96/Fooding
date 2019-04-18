@@ -14,8 +14,6 @@ public class Dish implements Serializable {
     private String photoUri;
     private long priceL;
 
-    private boolean expanded;
-    
     public Dish(String name, String description, ImageView photo, String price, Long priceL, int available_qty, String photoUri) {
         this.name = name;
         this.description = description;
@@ -24,14 +22,6 @@ public class Dish implements Serializable {
         this.available_qty = available_qty;
         this.photoUri = photoUri;
         this.priceL = priceL;
-    }
-
-    public boolean isExpanded() {
-        return expanded;
-    }
-
-    public void setExpanded(boolean expanded) {
-        this.expanded = expanded;
     }
 
     public String getPhotoUri() {

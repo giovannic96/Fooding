@@ -55,7 +55,7 @@ public class AddDishActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dish_descriptor);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         photo = findViewById(R.id.dish_photo_iv);
@@ -80,35 +80,35 @@ public class AddDishActivity extends AppCompatActivity {
         }
 
         add_image_btn.setOnClickListener(e -> {
-            if(isStoragePermissionGranted()) {
+            if(isStoragePermissionGranted())
                 selectImage();
-            }
         });
 
         plus_btn.setOnClickListener(e-> {
             String value=qty_et.getText().toString();
+            if(value.isEmpty())
+                value = "0";
             Integer val= Integer.parseInt(value);
-            val=new Integer(val.intValue()+1);
-            qty_et.setText(val.toString());
+            val++;
+            qty_et.setText(String.valueOf(val));
         });
 
         negative_btn.setOnClickListener(e-> {
             String value=qty_et.getText().toString();
+            if(value.isEmpty())
+                value = "0";
             Integer val= Integer.parseInt(value);
-
-            if(!val.equals(0))
-            {
-                val=new Integer(val.intValue()-1);
-                qty_et.setText(val.toString());
+            if(!val.equals(0)) {
+                val--;
+                qty_et.setText(String.valueOf(val));
             }
-
         });
 
         save_btn.setOnClickListener(v -> {
             String name = name_et.getText().toString();
             String description = desc_et.getText().toString();
             ImageView photo = this.photo;
-            Long pricel = price_et.getRawValue();
+            Long priceLong = price_et.getRawValue();
             String price = price_et.formatCurrency(price_et.getRawValue());
             int qty;
             if(qty_et.getText().toString().matches("^-?\\d+$"))
@@ -116,7 +116,7 @@ public class AddDishActivity extends AppCompatActivity {
             else
                 qty = 1;
 
-            dish = new Dish(name, description, photo, price, pricel, qty, selectedPhoto != null ? selectedPhoto.toString() : "");
+            dish = new Dish(name, description, photo, price, priceLong, qty, selectedPhoto != null ? selectedPhoto.toString() : "");
 
             finish();
         });
@@ -130,15 +130,13 @@ public class AddDishActivity extends AppCompatActivity {
     }
 
     public boolean isStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= 23)
             if (checkPermission())
                 return true;
             else
                 requestStoragePermission();
-        }
-        else {
+        else
             return true;
-        }
         return false;
     }
 
@@ -241,8 +239,7 @@ public class AddDishActivity extends AppCompatActivity {
         }
     }
 
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         finish();
         return true;
     }
