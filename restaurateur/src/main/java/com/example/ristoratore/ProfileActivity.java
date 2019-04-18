@@ -28,6 +28,9 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         avatar = findViewById(R.id.avatar);
         name_tv = findViewById(R.id.name_text);
@@ -73,6 +76,8 @@ public class ProfileActivity extends AppCompatActivity {
             Intent i = new Intent(getApplicationContext(), EditActivity.class);
             startActivity(i);
         }
+        else
+            finish();
         return true;
     }
 }

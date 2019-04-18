@@ -2,17 +2,38 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="190dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/rel_view">
+    //android:background="@drawable/bg">
+
+
+    <de.hdodenhof.circleimageview.CircleImageView xmlns:ristoratore="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/avatar"
+        android:layout_width="73dp"
+        android:layout_height="67dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="103dp"
+        android:clickable="true"
+        android:contentDescription="@string/photo"
+        android:focusable="true"
+        android:foregroundGravity="center"
+        android:src="@drawable/ic_launcher_foreground"
+        ristoratore:civ_border_color="#d1b1b1"
+        ristoratore:civ_fill_color="@color/colorAccent" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="La mia APP"
-        android:textSize="14sp"
-        android:textColor="#FFF"
-        android:textStyle="bold"
-        android:gravity="center_horizontal"
-        android:paddingBottom="4dp"
-        android:id="@+id/miaapp" />
-
+        android:id="@+id/textView"
+        android:layout_width="154dp"
+        android:layout_height="76dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="22dp"
+        android:layout_marginBottom="7dp"
+        android:fontFamily="sans-serif-black"
+        android:gravity="center"
+        android:text="FOODING"
+        android:textColor="@android:color/black" />
 </RelativeLayout>

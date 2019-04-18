@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -54,6 +55,9 @@ public class EditDishActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.dish_descriptor_2);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         photo = findViewById(R.id.dish_photo_iv);
         name_et = findViewById(R.id.dish_name_et);
@@ -249,6 +253,12 @@ public class EditDishActivity extends AppCompatActivity {
         returnIntent.putExtra("position", position);
         setResult(RESULT_SAVE, returnIntent);
         super.finish();
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        finish();
+        return true;
     }
 
     public void finish_delete() {
