@@ -12,16 +12,22 @@ public class Dish implements Serializable {
     private String price;
     private int available_qty;
     private String photoUri;
+    private long priceL;
 
+<<<<<<< HEAD
     private boolean expanded;
 
     public Dish(String name, String description, ImageView photo, String price, int available_qty, String photoUri) {
+=======
+    public Dish(String name, String description, ImageView photo, String price, Long priceL, int available_qty, String photoUri) {
+>>>>>>> 1e35a23dc8c5f654dd9694639c212d035c69bb07
         this.name = name;
         this.description = description;
         this.photo = photo;
         this.price = price;
         this.available_qty = available_qty;
         this.photoUri = photoUri;
+        this.priceL = priceL;
     }
 
     public boolean isExpanded() {
@@ -46,6 +52,10 @@ public class Dish implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getPriceL(){
+        return priceL;
     }
 
     public String getName() {

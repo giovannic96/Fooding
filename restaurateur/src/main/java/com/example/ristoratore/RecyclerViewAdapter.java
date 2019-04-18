@@ -50,6 +50,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.dishPrice.setTypeface(robotoBold);
         holder.dishPrice.setText(dish.getPrice());
 
+        holder.dishDesc.setTypeface(robotoBold);
+        holder.dishDesc.setText(dish.getDescription());
+
         if(dish.getPhotoUri() != null && !dish.getPhotoUri().equals(""))
             holder.dishPhoto.setImageURI(Uri.parse(dish.getPhotoUri()));
 
@@ -77,13 +80,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         });
     }
 
-    protected void setDataToView(TextView name, TextView desc, ImageView photo, int pos) {
+    protected void setDataToView(TextView name, ImageView photo, TextView price, TextView desc, int pos) {
         Dish dish = itemList.get(pos);
 
         name.setTypeface(robotoRegular);
         name.setText(dish.getName());
 
+<<<<<<< HEAD
         desc.setTypeface(robotoRegular);
+=======
+        price.setTypeface(robotoItalic);
+        price.setText(dish.getPrice());
+
+        desc.setTypeface(robotoItalic);
+>>>>>>> 1e35a23dc8c5f654dd9694639c212d035c69bb07
         desc.setText(dish.getDescription());
 
         if(dish.getPhotoUri() != null && !dish.getPhotoUri().equals(""))
@@ -114,7 +124,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             dishName = itemView.findViewById(R.id.dish_name_tv);
             dishPrice = itemView.findViewById(R.id.dish_price_tv);
             dishDesc = itemView.findViewById(R.id.dish_desc_tv);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1e35a23dc8c5f654dd9694639c212d035c69bb07
             itemView.setOnClickListener(this);
         }
 

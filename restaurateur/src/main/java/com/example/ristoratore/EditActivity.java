@@ -16,7 +16,9 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -42,6 +44,7 @@ public class EditActivity extends AppCompatActivity {
     public static final String INFO_PREFS = "info_prefs";
 
     private CircleImageView avatar;
+    private Button addImage;
     private Button save_btn;
     private EditText name_et;
     private EditText addr_et;
@@ -58,6 +61,9 @@ public class EditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = preferences.edit();
         avatar = findViewById(R.id.avatar);
@@ -68,6 +74,12 @@ public class EditActivity extends AppCompatActivity {
         mail_et = findViewById(R.id.mail_et);
         hour_et = findViewById(R.id.hour_et);
         info_et = findViewById(R.id.info_et);
+        addImage = findViewById(R.id.add_image_btn);
+
+        name_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        addr_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        info_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        hour_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
 
         if(preferences.contains(EditActivity.URI_PREFS)) {
             avatar.setImageURI(Uri.parse(preferences.getString(EditActivity.URI_PREFS, "")));
@@ -95,7 +107,7 @@ public class EditActivity extends AppCompatActivity {
             }
         }
 
-        avatar.setOnClickListener(e -> {
+        addImage.setOnClickListener(e -> {
             if(isStoragePermissionGranted()) {
                 selectImage();
             }
@@ -132,6 +144,13 @@ public class EditActivity extends AppCompatActivity {
             }
             finish();
         });
+    }
+
+
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        finish();
+        return true;
     }
 
     @Override

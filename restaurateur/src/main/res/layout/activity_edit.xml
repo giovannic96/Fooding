@@ -10,6 +10,7 @@
     android:layout_marginStart="16dp"
     android:layout_marginEnd="16dp">
 
+<<<<<<< HEAD
     <de.hdodenhof.circleimageview.CircleImageView
         xmlns:ristoratore="http://schemas.android.com/apk/res-auto"
         android:id="@+id/avatar"
@@ -24,11 +25,39 @@
         ristoratore:civ_fill_color="@color/primaryLightColor"
         android:foregroundGravity="center"
         android:focusable="true" />
+=======
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/avatar"
+            android:layout_width="225dp"
+            android:layout_height="225dp"
+            android:layout_marginBottom="20dp"
+            android:src="@mipmap/chef_256" />
+
+        <Button
+            android:id="@+id/add_image_btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignEnd="@id/avatar"
+            android:layout_alignBottom="@+id/avatar"
+            android:layout_gravity="bottom|end"
+            android:background="@drawable/circle"
+            android:clickable="true"
+            android:drawableTop="@mipmap/icons8_add_image_36"
+            android:elevation="4dp"
+            android:focusable="true"
+            android:paddingTop="10dp" />
+    </RelativeLayout>
+>>>>>>> 1e35a23dc8c5f654dd9694639c212d035c69bb07
     <EditText
         android:id="@+id/name_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
+        android:inputType="textCapSentences|textMultiLine"
         android:hint="@string/cust_name"
         android:layout_marginTop="40dp"
         />
@@ -36,7 +65,7 @@
         android:id="@+id/address_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textVisiblePassword"
+        android:inputType="textCapSentences|textMultiLine"
         android:hint="@string/cust_addr"
         android:layout_marginTop="25dp"
         />
@@ -52,7 +81,7 @@
         android:id="@+id/mail_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
+        android:inputType="textCapSentences|textMultiLine"
         android:hint="@string/cust_mail"
         android:layout_marginTop="25dp"
         />
@@ -60,7 +89,7 @@
         android:id="@+id/hour_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
+        android:inputType="textCapSentences|textMultiLine"
         android:hint="@string/cust_hour"
         android:layout_marginTop="25dp"
         />
@@ -68,7 +97,7 @@
         android:id="@+id/info_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
+        android:inputType="textCapSentences|textMultiLine"
         android:hint="@string/cust_info"
         android:layout_marginTop="25dp"
         />
