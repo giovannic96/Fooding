@@ -14,7 +14,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.AdapterView;
 
 import com.example.ristoratore.menu.Dish;
 import java.util.List;
@@ -59,11 +58,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.dishPhoto.setImageURI(Uri.parse(dish.getPhotoUri()));
 
         holder.slideAnimator.addUpdateListener(animation -> {
-            // set as height the value the interpolator is at
-            holder.cardView.getLayoutParams().height = (Integer) animation.getAnimatedValue();
-            // force all layouts to see which ones are affected by this layouts height change
-            holder.cardView.requestLayout();
-
+            holder.cardView.getLayoutParams().height = (Integer) animation.getAnimatedValue(); // set as height the value the interpolator is at
+            holder.cardView.requestLayout(); // force all layouts to see which ones are affected by this layouts height change
         });
 
         holder.itemView.setOnClickListener(v -> {
@@ -126,8 +122,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return itemList.get(id);
     }
 
-    // Catch click events
-    void setClickListener(ItemClickListener itemClickListener) {
+    void setClickListener(ItemClickListener itemClickListener) { // Catch click events
         this.clkListener = itemClickListener;
     }
 
@@ -135,8 +130,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.longClkListener = longClkLister;
     }
 
-    // parent activity will implement this method to respond to click events
-    public interface ItemClickListener {
+    public interface ItemClickListener { // parent activity will implement this method to respond to click events
         void onItemClick(View view, int position);
     }
 

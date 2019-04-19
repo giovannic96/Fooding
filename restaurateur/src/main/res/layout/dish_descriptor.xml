@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -73,60 +74,35 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="104dp"
-        android:layout_marginTop="20dp">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp">
 
         <TextView
-            android:id="@+id/textView2"
-            android:layout_width="130dp"
-            android:layout_height="49dp"
+            android:id="@+id/qty_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
             android:layout_marginStart="0dp"
             android:layout_marginTop="0dp"
             android:gravity="center"
+            android:textAppearance="@android:style/TextAppearance.Material.Large"
             android:text="@string/select_qty" />
 
-        <EditText
-            android:id="@+id/dish_qty_et"
-            android:layout_width="130dp"
-            android:layout_height="55dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="49dp"
-            android:layout_marginBottom="0dp"
-            android:ems="10"
+        <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+            android:id="@+id/qty_inc_dec"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:inputType="number"
-            android:text="@string/zero" />
-
-        <ImageButton
-            android:id="@+id/plus_btn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="29dp"
-            android:layout_marginEnd="59dp"
-            android:adjustViewBounds="true"
-            android:background="#fafafa"
-            android:scaleType="fitCenter"
-            app:srcCompat="@mipmap/plus_green" />
-
-        <ImageButton
-            android:id="@+id/negative_btn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="29dp"
-            android:layout_marginEnd="119dp"
-            android:adjustViewBounds="true"
-            android:background="#fafafa"
-            android:scaleType="fitCenter"
-            app:srcCompat="@mipmap/negative_red" />
+            android:layout_toEndOf="@+id/qty_tv"
+            android:layout_marginStart="30dp"
+            app:backGroundColor="@color/secondaryColor"
+            app:initialNumber="0"
+            app:finalNumber="10000"
+            app:textSize="9sp"
+            android:layout_centerVertical="true"
+            tools:ignore="SmallSp">
+        </com.cepheuen.elegantnumberbutton.view.ElegantNumberButton>
     </RelativeLayout>
 
     <Button

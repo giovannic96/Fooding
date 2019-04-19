@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blackcat.currencyedittext.CurrencyEditText;
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.example.ristoratore.menu.Dish;
 
 import java.io.File;
@@ -46,18 +47,15 @@ public class EditDishActivity extends AppCompatActivity {
     private EditText name_et;
     private EditText desc_et;
     private CurrencyEditText price_et;
-    private EditText qty_et;
     private Uri selectedPhoto;
-    private Button add_image_btn;
-    private ImageButton plus_btn;
-    private ImageButton negative_btn;
+    private ElegantNumberButton qty_inc_dec;
     private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.dish_descriptor_2);
+        setContentView(R.layout.dish_descriptor);
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -66,12 +64,9 @@ public class EditDishActivity extends AppCompatActivity {
         name_et = findViewById(R.id.dish_name_et);
         desc_et = findViewById(R.id.dish_desc_et);
         price_et = findViewById(R.id.dish_price_et);
-        qty_et = findViewById(R.id.dish_qty_et);
-        add_image_btn = findViewById(R.id.add_image_btn);
+        Button add_image_btn = findViewById(R.id.add_image_btn);
+        qty_inc_dec = findViewById(R.id.qty_inc_dec);
         Button save_btn = findViewById(R.id.save_dish_btn);
-        Button delete_btn = findViewById(R.id.delete_dish_btn);
-        plus_btn = findViewById(R.id.plus_btn);
-        negative_btn = findViewById(R.id.negative_btn);
 
         name_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         desc_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
@@ -88,26 +83,7 @@ public class EditDishActivity extends AppCompatActivity {
                 selectImage();
         });
 
-        plus_btn.setOnClickListener(e-> {
-            String value = qty_et.getText().toString();
-            if(value.isEmpty())
-                value="0";
-            Integer val = Integer.parseInt(value);
-            val++;
-            qty_et.setText(String.valueOf(val));
-        });
-
-        negative_btn.setOnClickListener(e-> {
-            String value=qty_et.getText().toString();
-            if(value.isEmpty())
-                value="0";
-            Integer val= Integer.parseInt(value);
-            if(!val.equals(0)) {
-                val--;
-                qty_et.setText(String.valueOf(val));
-            } else {
-             qty_et.setText("0");
-            }
+        qty_inc_dec.setOnClickListener((ElegantNumberButton.OnClickListener) view -> {
         });
 
         save_btn.setOnClickListener(v -> {
@@ -115,45 +91,25 @@ public class EditDishActivity extends AppCompatActivity {
             String description = desc_et.getText().toString();
             ImageView photo = this.photo;
             String price = price_et.formatCurrency(price_et.getRawValue());
-            Long pricel = price_et.getRawValue();
-            int qty;
-            if(qty_et.getText().toString().matches("^-?\\d+$"))
-                qty = Integer.parseInt(qty_et.getText().toString());
-            else
-                qty = 1;
+            Long priceLong = price_et.getRawValue();
+            int qty_tv = Integer.parseInt(qty_inc_dec.getNumber());
 
-            dish = new Dish(name, description, photo, price, pricel, qty, selectedPhoto != null ? selectedPhoto.toString() : "");
+            dish = new Dish(name, description, photo, price, priceLong, qty_tv, selectedPhoto != null ? selectedPhoto.toString() : "");
             finish_save();
         });
 
-        delete_btn.setOnClickListener(e -> {
-            final CharSequence[] items = { "Yes", "No"};
-            AlertDialog.Builder builder = new AlertDialog.Builder(EditDishActivity.this);
-            builder.setTitle("Are you sure you want to delete this dish?");
-            builder.setItems(items, (dialog, item) -> {
-                if (items[item].equals("Yes")) {
-                    finish_delete();
-                } else if (items[item].equals("No")) {
-                    dialog.dismiss();
-                }
-            });
-            builder.show();
-        });
-
-        Intent i=getIntent();
-        position=i.getIntExtra("position", 0);
-        Dish d=(Dish)i.getSerializableExtra("dish");
+        Intent i = getIntent();
+        position = i.getIntExtra("position", 0);
+        Dish d = (Dish)i.getSerializableExtra("dish");
         if(d.getPhotoUri() != null && !d.getPhotoUri().equals("")){
-            selectedPhoto=Uri.parse(d.getPhotoUri());
+            selectedPhoto = Uri.parse(d.getPhotoUri());
             photo.setImageURI(selectedPhoto);
         }
-
 
         name_et.setText(d.getName(), TextView.BufferType.EDITABLE);
         desc_et.setText(d.getDescription(), TextView.BufferType.EDITABLE);
         price_et.setValue(d.getPriceL());
-        qty_et.setText(String.valueOf(d.getAvailable_qty()), TextView.BufferType.EDITABLE);
-
+        qty_inc_dec.setNumber(String.valueOf(d.getAvailable_qty()));
     }
 
     @Override
@@ -164,15 +120,13 @@ public class EditDishActivity extends AppCompatActivity {
     }
 
     public boolean isStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= 23)
             if (checkPermission())
                 return true;
             else
                 requestStoragePermission();
-        }
-        else {
+        else
             return true;
-        }
         return false;
     }
 
@@ -181,13 +135,12 @@ public class EditDishActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(EditDishActivity.this);
         builder.setTitle("Add Photo!");
         builder.setItems(items, (dialog, item) -> {
-            if (items[item].equals("Take Photo")) {
+            if (items[item].equals("Take Photo"))
                 cameraIntent();
-            } else if (items[item].equals("Choose from Library")) {
+            else if (items[item].equals("Choose from Library"))
                 galleryIntent();
-            } else if (items[item].equals("Cancel")) {
+            else if (items[item].equals("Cancel"))
                 dialog.dismiss();
-            }
         });
         builder.show();
     }
@@ -217,9 +170,8 @@ public class EditDishActivity extends AppCompatActivity {
 
         switch (requestCode) {
             case CAM_REQCODE:
-                if (resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK)
                     photo.setImageURI(selectedPhoto);
-                }
                 break;
             case GALLERY_REQCODE:
                 if (imageReturnedIntent != null && resultCode == RESULT_OK) {
@@ -251,16 +203,15 @@ public class EditDishActivity extends AppCompatActivity {
     }
 
     private void requestStoragePermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE))
             new AlertDialog.Builder(this)
                     .setTitle("Permission needed")
                     .setMessage("This permission is needed to store images")
                     .setPositiveButton("Ok", (dialog, which) -> ActivityCompat.requestPermissions(EditDishActivity.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERM_CODE))
                     .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
                     .create().show();
-        } else {
+        else
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERM_CODE);
-        }
     }
 
     @Override
@@ -275,7 +226,6 @@ public class EditDishActivity extends AppCompatActivity {
         }
     }
 
-
     public void finish_save() {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("dish_item", dish);
@@ -284,8 +234,7 @@ public class EditDishActivity extends AppCompatActivity {
         super.finish();
     }
 
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         finish();
         return true;
     }

@@ -125,12 +125,6 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
     @Override
     public void onItemClick(View view, int position) {
         Toast.makeText(this, "Clicked " + adapter.getItem(position).getName() + " on position " + position, Toast.LENGTH_SHORT).show();
-        /*
-        Intent i = new Intent(getApplicationContext(), EditDishActivity.class);
-        i.putExtra("dish", adapter.getItem(position));
-        i.putExtra("position", position);
-        startActivityForResult(i, EDIT_ITEM_REQ);
-        */
     }
 
     public void onItemLongClick(View view, int position) {
@@ -145,10 +139,20 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
                 i.putExtra("position", position);
                 startActivityForResult(i, EDIT_ITEM_REQ);
             }
-            else if (items[item].equals("Delete")){
-                dishes.remove(position);
-                adapter.notifyItemRemoved(position);
-                saveData();
+            else if (items[item].equals("Delete")) {
+                final CharSequence[] choices = { "Yes", "No"};
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(DailyOfferActivity.this);
+                dialogBuilder.setTitle("Are you sure you want to delete this dish?");
+                dialogBuilder.setItems(choices, (dial, choice) -> {
+                    if (choices[choice].equals("Yes")) {
+                        dishes.remove(position);
+                        adapter.notifyItemRemoved(position);
+                        saveData();
+                    } else if (choices[choice].equals("No")) {
+                        dial.dismiss();
+                    }
+                });
+                dialogBuilder.show();
             }
         });
         builder.setTitle(adapter.getItem(position).getName());
