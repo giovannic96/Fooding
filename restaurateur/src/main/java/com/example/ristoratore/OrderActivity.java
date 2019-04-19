@@ -38,18 +38,18 @@ public class OrderActivity extends AppCompatActivity implements OrderViewAdapter
 
 
     //Hard-coded list of orders to check if it works before implementing interactivity with custoemr app
-    Dish Potato = new Dish("potato","buone",null,"1",(long)1,1,null);
-    Dish Carrot = new Dish("carrot","buone",null,"2",(long)2,2,null);
-    Dish Meat = new Dish("meat","buone",null,"3",(long)3,3,null);
+    Dish Potato = new Dish("potato","buone",null,"1 €",(long)1,1,null);
+    Dish Carrot = new Dish("carrot","buone",null,"2 €",(long)2,2,null);
+    Dish Meat = new Dish("meat","buone",null,"3 €",(long)3,3,null);
     ArrayList<Dish> dishL1 = new ArrayList<Dish>(Arrays.asList(Potato,Carrot));
     ArrayList<Dish> dishL2 = new ArrayList<Dish>(Arrays.asList(Meat,Carrot));
     ArrayList<Dish> dishL3 = new ArrayList<Dish>(Arrays.asList(Potato,Meat));
     GregorianCalendar date1 = new GregorianCalendar(2019,4,18,12,00);
     GregorianCalendar date2 = new GregorianCalendar(2019,4,18,10,00);
     GregorianCalendar date3 = new GregorianCalendar(2019,4,18,16,00);
-    Order ord1 = new Order (1, 0, dishL1,"Puzzo","corso Duca 1",date1,"55",(long)55 );
-    Order ord2 = new Order (2, 0, dishL2,"Pazzo","corso Duca 2",date2,"75",(long)75 );
-    Order ord3 = new Order (3, 0, dishL3,"Pizzo","corso Duca 3",date3,"95",(long)95 );
+    Order ord1 = new Order (1, 0, dishL1,"Puzzo","corso Duca 1",date1,"55 €",(long)55 );
+    Order ord2 = new Order (2, 0, dishL2,"Pazzo","corso Duca 2",date2,"75 €",(long)75 );
+    Order ord3 = new Order (3, 0, dishL3,"Pizzo","corso Duca 3",date3,"95 €",(long)95 );
     ArrayList<Order> orders = new ArrayList<Order>(Arrays.asList(ord1,ord2,ord3));
 
 
