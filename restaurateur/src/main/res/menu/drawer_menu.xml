@@ -5,12 +5,15 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/profile_btn"
+            android:icon="@drawable/ic_account_circle_black_24dp"
             android:title="@string/profile_btn"></item>
         <item
             android:id="@+id/dailyoffer_btn"
+            android:icon="@drawable/ic_restaurant_menu_black_24dp"
             android:title="@string/dailyoffer_btn"></item>
         <item
             android:id="@+id/order_btn"
+            android:icon="@drawable/ic_assignment_late_black_24dp"
             android:title="@string/orders_btn"></item>
     </group>
 </menu>

@@ -77,10 +77,10 @@ public class EditActivity extends AppCompatActivity {
         info_et = findViewById(R.id.info_et);
         addImage = findViewById(R.id.add_image_btn);
 
-        name_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        /*name_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         addr_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         info_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
-        hour_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        hour_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);*/
 
         if(preferences.contains(EditActivity.URI_PREFS)) {
             avatar.setImageURI(Uri.parse(preferences.getString(EditActivity.URI_PREFS, "")));

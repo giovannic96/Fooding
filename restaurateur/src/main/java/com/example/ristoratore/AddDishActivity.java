@@ -69,8 +69,8 @@ public class AddDishActivity extends AppCompatActivity {
         qty_inc = findViewById(R.id.qty_inc);
         qty_dec = findViewById(R.id.qty_dec);
 
-        name_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
-        desc_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        //name_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        //desc_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
 
         if (savedInstanceState != null) {
             if(savedInstanceState.containsKey("uri_photo")) {
@@ -122,16 +122,34 @@ public class AddDishActivity extends AppCompatActivity {
 
         save_btn.setOnClickListener(v -> {
             String name = name_et.getText().toString();
+            if(name.isEmpty())
+            {
+                Toast.makeText(this, "Name field is empty!", Toast.LENGTH_SHORT).show();
+                return;
+            }
             String description = desc_et.getText().toString();
+            if(description.isEmpty())
+            {
+                Toast.makeText(this, "Description field is empty!", Toast.LENGTH_SHORT).show();
+                return;
+            }
             ImageView photo = this.photo;
             Long priceLong = price_et.getRawValue();
+            if(priceLong.toString().equals("0"))
+            {
+                Toast.makeText(this, "Price field is zero!", Toast.LENGTH_SHORT).show();
+                return;
+            }
             String price = price_et.formatCurrency(price_et.getRawValue());
             int qty;
             if(qty_et.getText().toString().matches("^-?\\d+$"))
                 qty = Integer.parseInt(qty_et.getText().toString());
             else
                 qty = 1;
-
+            if(qty == 0) {
+                Toast.makeText(this, "Quantity is zero!", Toast.LENGTH_SHORT).show();
+                return;
+            }
             dish = new Dish(name, description, photo, price, priceLong, qty, selectedPhoto != null ? selectedPhoto.toString() : "");
             finish();
         });
