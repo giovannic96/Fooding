@@ -8,4 +8,6 @@
   <color name="secondaryDarkColor">#a30000</color>
   <color name="primaryTextColor">#ffffff</color>
   <color name="secondaryTextColor">#ffffff</color>
+  <color name="cardNormalColor">#ffffff</color>
+  <color name="cardSelectedColor">#dddddd</color>
 </resources>
