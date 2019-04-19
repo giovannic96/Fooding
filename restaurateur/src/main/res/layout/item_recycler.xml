@@ -35,7 +35,7 @@
                 android:maxLines="2"
                 android:text="OCCCCCCCCCCCCCCCCfCCCCCCCCCCCCCCCCCCCCC"
                 android:textColor="@android:color/secondary_text_light"
-                android:textSize="23sp" />
+                android:textSize="22sp" />
 
             <TextView
                 android:id="@+id/dish_price_tv"
@@ -55,17 +55,23 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginTop="120dp">
             <TextView
                 android:id="@+id/dish_desc_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Questa è la descrizione del piatto daskljf kjdklaòsjklfj askòljfklaòdjsf klajskdflj dakslòjfklsaòdjfkl ajklf jaòlsjf kòlas"
                 android:textSize="18sp"
-                android:layout_marginEnd="8dp"
                 android:textColor="@android:color/tertiary_text_dark"
-                android:maxLines="8"
+                android:maxLines="5"
                 android:visibility="visible"
-                android:layout_marginTop="108sp"
                 android:maxLength="300"
                 android:ellipsize="end" />
         </RelativeLayout>
@@ -81,6 +87,6 @@
         app:civ_border_width="4dp"
         android:src="@mipmap/icons8_spaghetti_96"
         android:elevation="8dp"
-        app:civ_fill_color="#FFFFFF"/>
+        app:civ_fill_color="@color/cardNormalColor"/>
 
 </RelativeLayout>

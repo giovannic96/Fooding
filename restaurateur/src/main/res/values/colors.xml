@@ -10,4 +10,5 @@
   <color name="secondaryTextColor">#ffffff</color>
   <color name="cardNormalColor">#ffffff</color>
   <color name="cardSelectedColor">#dddddd</color>
+  <color name="backgroundRecView">#eeeeee</color>
 </resources>

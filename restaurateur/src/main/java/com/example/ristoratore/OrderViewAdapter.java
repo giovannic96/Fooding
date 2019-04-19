@@ -1,8 +1,8 @@
 package com.example.ristoratore;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.ristoratore.menu.Dish;
 import com.example.ristoratore.menu.Order;
 
 import java.text.SimpleDateFormat;
@@ -22,13 +21,14 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
     private List<Order> itemList;
     private LayoutInflater layInflater;
     private ItemClickListener clkListener;
-    private Typeface robotoItalic, robotoBold;
+    private Typeface robotoRegular, robotoBold;
+    @SuppressLint("SimpleDateFormat")
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm");
 
     OrderViewAdapter(Context context, List<Order> data) {
         this.layInflater = LayoutInflater.from(context);
         this.itemList = data;
-        robotoItalic = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Italic.ttf");
+        robotoRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
         robotoBold = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-BoldItalic.ttf");
     }
 
@@ -59,11 +59,8 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
             case 4:
                 holder.orderStatus.setImageResource(R.mipmap.delivered);
                 break;
-
         }
-
-
-        holder.orderAddress.setTypeface(robotoItalic);
+        holder.orderAddress.setTypeface(robotoRegular);
         holder.orderAddress.setText(order.getAddress());
 
         holder.orderTime.setTypeface(robotoBold);
@@ -71,39 +68,6 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
 
         holder.orderPrice.setTypeface(robotoBold);
         holder.orderPrice.setText(order.getPrice());
-
-    }
-
-    protected void setDataToView(ImageView orderStatus,TextView address, TextView price, TextView deliveryTime, int pos) {
-        Order order = itemList.get(pos);
-
-        switch(order.getStatus()) {
-            case 0:
-                orderStatus.setImageResource(R.mipmap.new_order);
-                break;
-            case 1:
-                orderStatus.setImageResource(R.mipmap.cooking);
-                break;
-            case 2:
-                orderStatus.setImageResource(R.mipmap.ready);
-                break;
-            case 3:
-                orderStatus.setImageResource(R.mipmap.in_delivery);
-                break;
-            case 4:
-                orderStatus.setImageResource(R.mipmap.delivered);
-                break;
-        }
-
-        address.setTypeface(robotoItalic);
-        address.setText(order.getAddress());
-
-        price.setTypeface(robotoItalic);
-        price.setText(order.getPrice());
-
-        deliveryTime.setTypeface(robotoItalic);
-        deliveryTime.setText(sdf.format(order.getDeliveryTime().getTime()));
-
     }
 
     @Override
@@ -111,7 +75,6 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
         return itemList.size();
     }
 
-    // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView orderStatus;
@@ -138,12 +101,10 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
         return itemList.get(id);
     }
 
-    // Catch click events
     void setClickListener(ItemClickListener itemClickListener) {
         this.clkListener = itemClickListener;
     }
 
-    // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
         void onItemClick(View view, int position);
     }
