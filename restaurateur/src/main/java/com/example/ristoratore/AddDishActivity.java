@@ -87,11 +87,31 @@ public class AddDishActivity extends AppCompatActivity {
 
         save_btn.setOnClickListener(v -> {
             String name = name_et.getText().toString();
+            if(name.isEmpty())
+            {
+                Toast.makeText(this, "Name field is empty!", Toast.LENGTH_SHORT).show();
+                return;
+            }
             String description = desc_et.getText().toString();
+            if(description.isEmpty())
+            {
+                Toast.makeText(this, "Description field is empty!", Toast.LENGTH_SHORT).show();
+                return;
+            }
             ImageView photo = this.photo;
             Long priceLong = price_et.getRawValue();
+            if(priceLong.toString().equals("0"))
+            {
+                Toast.makeText(this, "Price field is zero!", Toast.LENGTH_SHORT).show();
+                return;
+            }
             String price = price_et.formatCurrency(price_et.getRawValue());
             int qty_tv = Integer.parseInt(qty_inc_dec.getNumber());
+            if(qty_tv==0)
+            {
+                Toast.makeText(this, "Quantity is zero!", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             dish = new Dish(name, description, photo, price, priceLong, qty_tv, selectedPhoto != null ? selectedPhoto.toString() : "");
             finish();
