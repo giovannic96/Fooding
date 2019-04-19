@@ -39,8 +39,8 @@
 
             <TextView
                 android:id="@+id/dish_price_tv"
-                android:layout_width="81dp"
-                android:layout_height="52dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/dish_name_tv"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
@@ -50,7 +50,7 @@
                 android:paddingStart="0dp"
                 android:paddingEnd="2dp"
                 android:paddingBottom="8dp"
-                android:text="7.48€"
+                android:text="64.466,66€"
                 android:textColor="@color/secondaryColor"
                 android:textSize="18sp"
                 android:textStyle="bold" />

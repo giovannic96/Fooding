@@ -129,6 +129,7 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
     }
 
     public void onItemLongClick(View view, int position) {
+
         AlertDialog.Builder builder = new AlertDialog.Builder(DailyOfferActivity.this);
         final CharSequence[] items = { "Edit", "Delete", "Cancel"};
         builder.setItems(items, (dialog, item) -> {

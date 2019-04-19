@@ -6,6 +6,12 @@
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/secondaryColor</item>
+        
+        <item name="actionModeBackground">@color/primaryColor</item>
     </style>
 
+    <style name="MyRippleTheme">
+        <item name="colorControlHighlight">@color/ripple_material_dark</item>
+        <item name="android:foreground">?selectableItemBackgroundBorderless</item>
+    </style>
 </resources>
