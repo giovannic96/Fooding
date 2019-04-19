@@ -1,7 +1,10 @@
 package com.example.ristoratore;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.View;
@@ -14,12 +17,22 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String URI_PREFS = "uri_prefs";
+    public static final String NAME_PREFS = "name_prefs";
 
     /*private Button profile_btn;
     private Button dailyoffer_btn;
     private Button orders_btn;*/
+    SharedPreferences preferences;
+    private CircleImageView avatar;
+    private TextView name_tv;
     private DrawerLayout mDrawerLayout;
     private NavigationView nv;
     ActionBarDrawerToggle abdToggle;
@@ -30,10 +43,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_drawer);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
         nv = findViewById(R.id.nav_view);
         nv.setNavigationItemSelectedListener(navSelectListener);
+        View header=nv.getHeaderView(0);
+        avatar=header.findViewById(R.id.avatar);
+        name_tv=header.findViewById(R.id.textView);
+        if(preferences.contains(EditActivity.URI_PREFS)) {
+            avatar.setImageURI(Uri.parse(preferences.getString(EditActivity.URI_PREFS, "")));
+            if (avatar.getDrawable() == null)
+                avatar.setImageResource(R.drawable.ic_launcher_foreground);
+        }
+        if(preferences.contains(EditActivity.NAME_PREFS))
+            name_tv.setText(preferences.getString(NAME_PREFS, ""));
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -69,6 +93,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        setContentView(R.layout.activity_main_drawer);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        nv = findViewById(R.id.nav_view);
+        nv.setNavigationItemSelectedListener(navSelectListener);
+        View header=nv.getHeaderView(0);
+        avatar=header.findViewById(R.id.avatar);
+        name_tv=header.findViewById(R.id.textView);
+        if(preferences.contains(EditActivity.URI_PREFS)) {
+            avatar.setImageURI(Uri.parse(preferences.getString(EditActivity.URI_PREFS, "")));
+            if (avatar.getDrawable() == null)
+                avatar.setImageResource(R.drawable.ic_launcher_foreground);
+        }
+        if(preferences.contains(EditActivity.NAME_PREFS))
+            name_tv.setText(preferences.getString(NAME_PREFS, ""));
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        abdToggle = new ActionBarDrawerToggle
+                (
+                        this,
+                        mDrawerLayout,
+                        R.string.drawer_open,
+                        R.string.drawer_close
+                )
+        {
+        };
+        mDrawerLayout.addDrawerListener(abdToggle);
+        abdToggle.syncState();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         if (abdToggle.onOptionsItemSelected(item))
@@ -98,6 +158,11 @@ public class MainActivity extends AppCompatActivity {
         }
         else if(title.equals("DAILY OFFER")){
             Intent i = new Intent(getApplicationContext(), DailyOfferActivity.class);
+            startActivity(i);
+        }
+
+        else if(title.equals("ORDERS")){
+            Intent i = new Intent(getApplicationContext(), OrderActivity.class);
             startActivity(i);
         }
     }
