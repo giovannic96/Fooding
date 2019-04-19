@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_border"
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/status_iv"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp"
+            android:src="@mipmap/paella_256" />
+
+        <ImageButton
+            android:id="@+id/switch_status_btn"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="63dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="64dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:adjustViewBounds="true"
+            android:padding="0dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/switch_status" />
+
+        <TextView
+            android:id="@+id/address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Largo Orbassano, 50"
+            android:layout_toEndOf="@+id/status_iv"
+            android:layout_marginTop="15dp"
+            android:gravity="start"
+            android:textColor="@android:color/secondary_text_light"
+            android:textAppearance="@android:style/TextAppearance.Material.Large" />
+
+        <TextView
+            android:id="@+id/deliveryTime"
+            android:layout_width="223dp"
+            android:layout_height="wrap_content"
+            android:text="2018.19.29 at 10.00"
+            android:layout_below="@+id/address"
+            android:layout_toEndOf="@+id/status_iv"
+            android:layout_marginTop="16dp"
+            android:textSize="15sp">
+        </TextView>
+
+        <TextView
+            android:id="@+id/info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/address"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="15dp"
+            android:gravity="bottom|end"
+            android:maxLength="100"
+            android:paddingStart="0dp"
+            android:paddingEnd="2dp"
+            android:paddingBottom="8dp"
+            android:text="No cipolla">
+        </TextView>
+        </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/backgroundRecView">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/dishes_rView"
+            android:paddingStart="4dp"
+            android:paddingEnd="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+</LinearLayout>
