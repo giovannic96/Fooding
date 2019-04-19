@@ -1,5 +1,7 @@
 package com.example.ristoratore;
 
+import android.animation.AnimatorSet;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -8,8 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.AdapterView;
 
 import com.example.ristoratore.menu.Dish;
 import java.util.List;
@@ -19,12 +24,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<Dish> itemList;
     private LayoutInflater layInflater;
     private ItemClickListener clkListener;
-    private Typeface robotoItalic, robotoBold;
+    private Typeface robotoRegular, robotoBold;
+    private ItemLongClickListener longClkListener;
 
     RecyclerViewAdapter(Context context, List<Dish> data) {
         this.layInflater = LayoutInflater.from(context);
         this.itemList = data;
-        robotoItalic = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Italic.ttf");
+        robotoRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
         robotoBold = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-BoldItalic.ttf");
     }
 
@@ -38,8 +44,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int pos) {
         Dish dish = itemList.get(pos);
+        final boolean[] isReverse = {false}; // for reverting the animation
 
-        holder.dishName.setTypeface(robotoItalic);
+        holder.dishName.setTypeface(robotoRegular);
         holder.dishName.setText(dish.getName());
 
         holder.dishPrice.setTypeface(robotoBold);
@@ -50,22 +57,29 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         if(dish.getPhotoUri() != null && !dish.getPhotoUri().equals(""))
             holder.dishPhoto.setImageURI(Uri.parse(dish.getPhotoUri()));
-    }
 
-    protected void setDataToView(TextView name, ImageView photo, TextView price, TextView desc, int pos) {
-        Dish dish = itemList.get(pos);
+        holder.slideAnimator.addUpdateListener(animation -> {
+            // set as height the value the interpolator is at
+            holder.cardView.getLayoutParams().height = (Integer) animation.getAnimatedValue();
+            // force all layouts to see which ones are affected by this layouts height change
+            holder.cardView.requestLayout();
 
-        name.setTypeface(robotoItalic);
-        name.setText(dish.getName());
+        });
 
-        price.setTypeface(robotoItalic);
-        price.setText(dish.getPrice());
-
-        desc.setTypeface(robotoItalic);
-        desc.setText(dish.getDescription());
-
-        if(dish.getPhotoUri() != null && !dish.getPhotoUri().equals(""))
-            photo.setImageURI(Uri.parse(dish.getPhotoUri()));
+        holder.itemView.setOnClickListener(v -> {
+            AnimatorSet set = new AnimatorSet();
+            if (!isReverse[0]) {
+                set.setInterpolator(new AccelerateDecelerateInterpolator());
+                holder.dishDesc.setVisibility(View.VISIBLE);
+                isReverse[0] = !isReverse[0];
+            } else {
+                set.setInterpolator(new ReverseInterpolator());
+                holder.dishDesc.setVisibility(View.GONE);
+                isReverse[0] = !isReverse[0];
+            }
+            set.play(holder.slideAnimator);
+            set.start();
+        });
     }
 
     @Override
@@ -74,12 +88,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     // stores and recycles views as they are scrolled off screen
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         ImageView dishPhoto;
         TextView dishName;
         TextView dishDesc;
         TextView dishPrice;
+
+        final View cardView = itemView.findViewById(R.id.card_view);
+        ValueAnimator slideAnimator = ValueAnimator
+                .ofInt(cardView.getLayoutParams().height, 700)
+                .setDuration(300);
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -88,11 +107,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             dishPrice = itemView.findViewById(R.id.dish_price_tv);
             dishDesc = itemView.findViewById(R.id.dish_desc_tv);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
             if (clkListener != null) clkListener.onItemClick(view, getAdapterPosition());
+        }
+
+        @Override
+        public boolean onLongClick(View view){
+            if(longClkListener != null) longClkListener.onItemLongClick(view, getAdapterPosition());
+            return false;
         }
     }
 
@@ -105,8 +131,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.clkListener = itemClickListener;
     }
 
+    void setLongClkListener(ItemLongClickListener longClkLister){
+        this.longClkListener = longClkLister;
+    }
+
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
         void onItemClick(View view, int position);
+    }
+
+    public interface ItemLongClickListener {
+        void onItemLongClick(View view, int position);
+    }
+}
+
+class ReverseInterpolator implements Interpolator {
+    @Override
+    public float getInterpolation(float paramFloat) {
+        return Math.abs(paramFloat -1f);
     }
 }

@@ -14,10 +14,12 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +40,6 @@ public class EditDishActivity extends AppCompatActivity {
     private static final int RESULT_SAVE = 34;
     private static final int RESULT_DELETE = 35;
 
-
     private Dish dish;
 
     private ImageView photo;
@@ -48,6 +49,8 @@ public class EditDishActivity extends AppCompatActivity {
     private EditText qty_et;
     private Uri selectedPhoto;
     private Button add_image_btn;
+    private ImageButton plus_btn;
+    private ImageButton negative_btn;
     private int position;
 
     @Override
@@ -56,7 +59,7 @@ public class EditDishActivity extends AppCompatActivity {
 
         setContentView(R.layout.dish_descriptor_2);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         photo = findViewById(R.id.dish_photo_iv);
@@ -67,6 +70,11 @@ public class EditDishActivity extends AppCompatActivity {
         add_image_btn = findViewById(R.id.add_image_btn);
         Button save_btn = findViewById(R.id.save_dish_btn);
         Button delete_btn = findViewById(R.id.delete_dish_btn);
+        plus_btn = findViewById(R.id.plus_btn);
+        negative_btn = findViewById(R.id.negative_btn);
+
+        name_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        desc_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
 
         if (savedInstanceState != null) {
             if(savedInstanceState.containsKey("uri_photo")) {
@@ -76,8 +84,29 @@ public class EditDishActivity extends AppCompatActivity {
         }
 
         add_image_btn.setOnClickListener(e -> {
-            if(isStoragePermissionGranted()) { /* TO-DO : check if before I had permissions !!!!!!!!!!!!!!!!!!!!! */
+            if(isStoragePermissionGranted())
                 selectImage();
+        });
+
+        plus_btn.setOnClickListener(e-> {
+            String value = qty_et.getText().toString();
+            if(value.isEmpty())
+                value="0";
+            Integer val = Integer.parseInt(value);
+            val++;
+            qty_et.setText(String.valueOf(val));
+        });
+
+        negative_btn.setOnClickListener(e-> {
+            String value=qty_et.getText().toString();
+            if(value.isEmpty())
+                value="0";
+            Integer val= Integer.parseInt(value);
+            if(!val.equals(0)) {
+                val--;
+                qty_et.setText(String.valueOf(val));
+            } else {
+             qty_et.setText("0");
             }
         });
 

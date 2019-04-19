@@ -14,11 +14,14 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blackcat.currencyedittext.CurrencyEditText;
@@ -44,13 +47,15 @@ public class AddDishActivity extends AppCompatActivity {
     private EditText qty_et;
     private Uri selectedPhoto;
     private Button add_image_btn;
+    private ImageButton plus_btn;
+    private ImageButton negative_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dish_descriptor);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         photo = findViewById(R.id.dish_photo_iv);
@@ -60,6 +65,12 @@ public class AddDishActivity extends AppCompatActivity {
         qty_et = findViewById(R.id.dish_qty_et);
         add_image_btn = findViewById(R.id.add_image_btn);
         Button save_btn = findViewById(R.id.save_dish_btn);
+        plus_btn = findViewById(R.id.plus_btn);
+        negative_btn = findViewById(R.id.negative_btn);
+
+        name_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        desc_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+
 
         if (savedInstanceState != null) {
             if(savedInstanceState.containsKey("uri_photo")) {
@@ -69,8 +80,27 @@ public class AddDishActivity extends AppCompatActivity {
         }
 
         add_image_btn.setOnClickListener(e -> {
-            if(isStoragePermissionGranted()) { /* TO-DO : check if before I had permissions !!!!!!!!!!!!!!!!!!!!! */
+            if(isStoragePermissionGranted())
                 selectImage();
+        });
+
+        plus_btn.setOnClickListener(e-> {
+            String value=qty_et.getText().toString();
+            if(value.isEmpty())
+                value = "0";
+            Integer val= Integer.parseInt(value);
+            val++;
+            qty_et.setText(String.valueOf(val));
+        });
+
+        negative_btn.setOnClickListener(e-> {
+            String value=qty_et.getText().toString();
+            if(value.isEmpty())
+                value = "0";
+            Integer val= Integer.parseInt(value);
+            if(!val.equals(0)) {
+                val--;
+                qty_et.setText(String.valueOf(val));
             }
         });
 
@@ -78,7 +108,7 @@ public class AddDishActivity extends AppCompatActivity {
             String name = name_et.getText().toString();
             String description = desc_et.getText().toString();
             ImageView photo = this.photo;
-            Long pricel = price_et.getRawValue();
+            Long priceLong = price_et.getRawValue();
             String price = price_et.formatCurrency(price_et.getRawValue());
             int qty;
             if(qty_et.getText().toString().matches("^-?\\d+$"))
@@ -86,7 +116,7 @@ public class AddDishActivity extends AppCompatActivity {
             else
                 qty = 1;
 
-            dish = new Dish(name, description, photo, price, pricel, qty, selectedPhoto != null ? selectedPhoto.toString() : "");
+            dish = new Dish(name, description, photo, price, priceLong, qty, selectedPhoto != null ? selectedPhoto.toString() : "");
 
             finish();
         });
@@ -100,15 +130,13 @@ public class AddDishActivity extends AppCompatActivity {
     }
 
     public boolean isStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= 23)
             if (checkPermission())
                 return true;
             else
                 requestStoragePermission();
-        }
-        else {
+        else
             return true;
-        }
         return false;
     }
 
@@ -211,8 +239,7 @@ public class AddDishActivity extends AppCompatActivity {
         }
     }
 
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         finish();
         return true;
     }

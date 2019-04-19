@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import java.util.Objects;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -28,7 +30,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -47,7 +49,7 @@ public class ProfileActivity extends AppCompatActivity {
         if(preferences.contains(EditActivity.URI_PREFS)) {
             avatar.setImageURI(Uri.parse(preferences.getString(EditActivity.URI_PREFS, "")));
             if(avatar.getDrawable() == null)
-                avatar.setImageResource(R.drawable.ic_launcher_foreground);
+                avatar.setImageResource(R.mipmap.chef_256);
         }
         if(preferences.contains(EditActivity.NAME_PREFS))
             name_tv.setText(preferences.getString(EditActivity.NAME_PREFS, ""));

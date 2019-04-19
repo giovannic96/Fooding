@@ -23,7 +23,7 @@
             android:contentDescription="@string/photo"
             android:src="@drawable/ic_launcher_foreground"
             app:civ_border_color="#d1b1b1"
-            app:civ_fill_color="@color/colorAccent"
+            app:civ_fill_color="@color/primaryLightColor"
             android:foregroundGravity="center"
             android:focusable="true"
             android:layout_marginEnd="22dp"/>

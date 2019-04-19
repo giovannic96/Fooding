@@ -1,7 +1,6 @@
 package com.example.ristoratore;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,12 +8,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 
@@ -22,11 +18,10 @@ import com.example.ristoratore.menu.Dish;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
-
-import static com.example.ristoratore.EditActivity.URI_PREFS;
+import java.util.Objects;
 
 @SuppressLint("Registered")
-public class DailyOfferActivity extends AppCompatActivity implements RecyclerViewAdapter.ItemClickListener {
+public class DailyOfferActivity extends AppCompatActivity implements RecyclerViewAdapter.ItemClickListener, RecyclerViewAdapter.ItemLongClickListener {
 
     private static final int ADD_ITEM_REQ = 40;
     private static final int EDIT_ITEM_REQ = 41;
@@ -47,53 +42,18 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dailyoffer);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         loadData();
         buildRecyclerView();
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        /*Button removeItem_btn = findViewById(R.id.remove_dish_btn);
-        Button removeAllItem_btn = findViewById(R.id.removeAll_dish_btn);
-        Button updateItem_btn = findViewById(R.id.update_dish_btn);
-        Button moveItem_btn = findViewById(R.id.move_dish_btn);*/
 
         fab.setOnClickListener(view -> {
             Intent i = new Intent(getApplicationContext(), AddDishActivity.class);
             startActivityForResult(i, ADD_ITEM_REQ);
         });
-
-        /*
-        removeItem_btn.setOnClickListener(v -> {
-            int removeIndex = 2;
-            dishes.remove(removeIndex);
-            adapter.notifyItemRemoved(removeIndex);
-        });
-
-        removeAllItem_btn.setOnClickListener(v -> {
-            dishes.clear();
-            adapter.notifyDataSetChanged();
-        });
-
-        updateItem_btn.setOnClickListener(v -> {
-            String newValue = "New dish name";
-            int updateIndex = 3;
-            dishes.set(updateIndex, newValue);
-            adapter.notifyItemChanged(updateIndex);
-        });
-
-        moveItem_btn.setOnClickListener(v -> {
-            int fromPosition = 3;
-            int toPosition = 1;
-
-            String item = dishes.get(fromPosition);
-            dishes.remove(fromPosition);
-            dishes.add(toPosition, item);
-
-            adapter.notifyItemMoved(fromPosition, toPosition);
-        });
-        */
     }
 
     @Override
@@ -152,6 +112,7 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
         rView.setLayoutManager(rLayoutManager);
         adapter = new RecyclerViewAdapter(this, dishes);
         adapter.setClickListener(this);
+        adapter.setLongClkListener(this);
         rView.setAdapter(adapter);
     }
 
@@ -164,37 +125,38 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
 
     @Override
     public void onItemClick(View view, int position) {
-        /* OLD VERSION */
+        Toast.makeText(this, "Clicked " + adapter.getItem(position).getName() + " on position " + position, Toast.LENGTH_SHORT).show();
         /*
-        //Toast.makeText(this, "Clicked " + adapter.getItem(position).getName() + " on position " + position, Toast.LENGTH_SHORT).show();
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.item_recycler);
-        dialog.setTitle("Position " + position);
-        dialog.setCancelable(true);
-
-        // set the custom dialog components - texts and image
-        TextView name = dialog.findViewById(R.id.dish_name_tv);
-        TextView price= dialog.findViewById(R.id.dish_price_tv);
-        TextView desc = dialog.findViewById(R.id.dish_desc_tv);
-        ImageView photo = dialog.findViewById(R.id.dish_photo_rec_iv);
-
-        adapter.setDataToView(name, photo, price, desc, position);
-
-        dialog.show();
-        */
-
         Intent i = new Intent(getApplicationContext(), EditDishActivity.class);
         i.putExtra("dish", adapter.getItem(position));
         i.putExtra("position", position);
         startActivityForResult(i, EDIT_ITEM_REQ);
-
-
-
-
+        */
     }
 
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public void onItemLongClick(View view, int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(DailyOfferActivity.this);
+        final CharSequence[] items = { "Edit", "Delete", "Cancel"};
+        builder.setItems(items, (dialog, item) -> {
+            if (items[item].equals("Cancel")) {
+                dialog.dismiss();
+            } else if (items[item].equals("Edit")) {
+                Intent i = new Intent(getApplicationContext(), EditDishActivity.class);
+                i.putExtra("dish", adapter.getItem(position));
+                i.putExtra("position", position);
+                startActivityForResult(i, EDIT_ITEM_REQ);
+            }
+            else if (items[item].equals("Delete")){
+                dishes.remove(position);
+                adapter.notifyItemRemoved(position);
+                saveData();
+            }
+        });
+        builder.setTitle(adapter.getItem(position).getName());
+        builder.show();
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
         finish();
         return true;
     }
