@@ -36,6 +36,7 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
     private RecyclerView.LayoutManager rLayoutManager;
     ArrayList<Dish> dishes;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
