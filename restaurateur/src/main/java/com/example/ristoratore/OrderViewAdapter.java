@@ -43,6 +43,26 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder holder, int pos) {
         Order order = itemList.get(pos);
 
+        switch(order.getStatus()) {
+            case 0:
+                holder.orderStatus.setImageResource(R.mipmap.new_order);
+                break;
+            case 1:
+                holder.orderStatus.setImageResource(R.mipmap.cooking);
+                break;
+            case 2:
+                holder.orderStatus.setImageResource(R.mipmap.ready);
+                break;
+            case 3:
+                holder.orderStatus.setImageResource(R.mipmap.in_delivery);
+                break;
+            case 4:
+                holder.orderStatus.setImageResource(R.mipmap.delivered);
+                break;
+
+        }
+
+
         holder.orderAddress.setTypeface(robotoItalic);
         holder.orderAddress.setText(order.getAddress());
 
@@ -54,8 +74,26 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
 
     }
 
-    protected void setDataToView(TextView address, TextView price, TextView deliveryTime, int pos) {
+    protected void setDataToView(ImageView orderStatus,TextView address, TextView price, TextView deliveryTime, int pos) {
         Order order = itemList.get(pos);
+
+        switch(order.getStatus()) {
+            case 0:
+                orderStatus.setImageResource(R.mipmap.new_order);
+                break;
+            case 1:
+                orderStatus.setImageResource(R.mipmap.cooking);
+                break;
+            case 2:
+                orderStatus.setImageResource(R.mipmap.ready);
+                break;
+            case 3:
+                orderStatus.setImageResource(R.mipmap.in_delivery);
+                break;
+            case 4:
+                orderStatus.setImageResource(R.mipmap.delivered);
+                break;
+        }
 
         address.setTypeface(robotoItalic);
         address.setText(order.getAddress());
@@ -76,14 +114,14 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView dishPhoto;
+        ImageView orderStatus;
         TextView orderAddress;
         TextView orderTime;
         TextView orderPrice;
 
         ViewHolder(View itemView) {
             super(itemView);
-            dishPhoto = itemView.findViewById(R.id.dish_photo_rec_iv);
+            orderStatus = itemView.findViewById(R.id.order_status_rec_iv);
             orderAddress = itemView.findViewById(R.id.address_tv);
             orderTime = itemView.findViewById(R.id.delivery_time_tv);
             orderPrice = itemView.findViewById(R.id.order_price_tv);

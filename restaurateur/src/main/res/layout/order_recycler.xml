@@ -72,7 +72,7 @@
     </android.support.v7.widget.CardView>
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/dish_photo_rec_iv"
+        android:id="@+id/order_status_rec_iv"
         android:layout_width="110dp"
         android:layout_height="90dp"
         android:layout_marginTop="18dp"
