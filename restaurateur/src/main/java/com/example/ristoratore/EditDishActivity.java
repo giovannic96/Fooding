@@ -144,8 +144,6 @@ public class EditDishActivity extends AppCompatActivity {
                 return;
             }
             String price = price_et.formatCurrency(price_et.getRawValue());
-            int qty_tv = Integer.parseInt(qty_inc_dec.getNumber());
-            
             int qty;
             if(qty_et.getText().toString().matches("^-?\\d+$"))
                 qty = Integer.parseInt(qty_et.getText().toString());
