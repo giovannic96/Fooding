@@ -68,8 +68,8 @@ public class EditDishActivity extends AppCompatActivity {
         qty_inc_dec = findViewById(R.id.qty_inc_dec);
         Button save_btn = findViewById(R.id.save_dish_btn);
 
-        name_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
-        desc_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        //name_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        //desc_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
 
         if (savedInstanceState != null) {
             if(savedInstanceState.containsKey("uri_photo")) {
