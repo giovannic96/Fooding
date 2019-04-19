@@ -19,8 +19,10 @@
         <activity android:name=".EditDishActivity" />
         <activity android:name=".OrderActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".SingleOrderActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".SingleOrderActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

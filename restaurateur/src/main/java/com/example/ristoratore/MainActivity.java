@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -34,12 +35,27 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private NavigationView nv;
     ActionBarDrawerToggle abdToggle;
+    private ImageButton dailyoffer_btn;
+    private ImageButton orders_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_drawer);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        dailyoffer_btn = findViewById(R.id.dailyoffer_btn);
+        orders_btn = findViewById(R.id.order_btn);
+
+        orders_btn.setOnClickListener(e -> {
+                Intent i = new Intent(getApplicationContext(), OrderActivity.class);
+                startActivity(i);
+        });
+
+        dailyoffer_btn.setOnClickListener(v -> {
+                Intent i = new Intent(getApplicationContext(), DailyOfferActivity.class);
+                startActivity(i);
+        });
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
         nv = findViewById(R.id.nav_view);
@@ -62,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
         abdToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {};
         mDrawerLayout.addDrawerListener(abdToggle);
         abdToggle.syncState();
+
+
     }
 
     @Override
