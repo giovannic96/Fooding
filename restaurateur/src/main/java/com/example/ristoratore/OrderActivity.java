@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.example.ristoratore.menu.Dish;
 import com.example.ristoratore.menu.Order;
@@ -36,22 +37,22 @@ public class OrderActivity extends AppCompatActivity implements OrderViewAdapter
     private OrderViewAdapter adapter;
     private RecyclerView.LayoutManager rLayoutManager;
 
-    //Hard-coded list of orders to check if it works before implementing interactivity with custoemr app
-    String desc1 = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.";
-    String desc2 = "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur?";
-    String desc3 = "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.";
-    Dish Potato = new Dish("Patate a forno", desc1,null,"12 €",(long)12,11,null);
-    Dish Carrot = new Dish("Carote in padella", desc2,null,"8 €",(long)8,21,null);
-    Dish Meat = new Dish("Carne alla brace", desc3,null,"6.50 €",(long)6.50,13,null);
+    //Hard-coded list of orders to check if it works before implementing interactivity with customer app
+    String desc1 = "A baked potato with a fluffy interior and a crisp skin. It comes served with a butter filling";
+    String desc2 = "Made by roasting carrots with olive oil, salt, and pepper, until they’re golden on the edges and tender throughout.";
+    String desc3 = "The garlicky marinade on these chops highlights the lamb's slightly gamey flavor";
+    Dish Potato = new Dish("Baked Potatoes with Butter", desc1,null,"5 €",(long)5,11,null);
+    Dish Carrot = new Dish("Roasted Carrots", desc2,null,"4.50 €",(long)4.50,21,null);
+    Dish Meat = new Dish("Grilled Lamb Chops with Roasted Garlic", desc3,null,"8 €",(long)8,13,null);
     ArrayList<Dish> dishL1 = new ArrayList<Dish>(Arrays.asList(Potato,Carrot));
     ArrayList<Dish> dishL2 = new ArrayList<Dish>(Arrays.asList(Meat,Carrot));
     ArrayList<Dish> dishL3 = new ArrayList<Dish>(Arrays.asList(Potato,Meat));
     GregorianCalendar date1 = new GregorianCalendar(2019,4,18,12,03);
     GregorianCalendar date2 = new GregorianCalendar(2019,4,18,10,00);
     GregorianCalendar date3 = new GregorianCalendar(2019,4,18,16,00);
-    Order ord1 = new Order (1, 0, dishL1,"Citofono Rossani, piano 4","Corso Duca degli Abruzzi, 22",date1,"47.5 €",(long)47.5);
-    Order ord2 = new Order (2, 0, dishL2,"No aglio","Largo Francia, 2",date2,"35 €", (long)35);
-    Order ord3 = new Order (3, 0, dishL3,"Quarto piano","Piazza Statuto, 25",date3,"15 €",(long)15);
+    Order ord1 = new Order (1, 0, dishL1,"Interphone Rossani, 4th floor","Corso Duca degli Abruzzi, 22",date1,"9.5 €",(long)9.5);
+    Order ord2 = new Order (2, 0, dishL2,"No garlic","Largo Francia, 2",date2,"12.5 €", (long)12.5);
+    Order ord3 = new Order (3, 0, dishL3,"Third floor","Piazza Statuto, 25",date3,"13 €",(long)13);
     ArrayList<Order> orders = new ArrayList<Order>(Arrays.asList(ord1,ord2,ord3));
 
     @Override
