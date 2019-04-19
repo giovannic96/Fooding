@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -44,7 +45,7 @@ public class EditActivity extends AppCompatActivity {
     public static final String INFO_PREFS = "info_prefs";
 
     private CircleImageView avatar;
-    private Button addImage;
+    private ImageView addImage;
     private Button save_btn;
     private EditText name_et;
     private EditText addr_et;

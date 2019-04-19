@@ -34,6 +34,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class AddDishActivity extends AppCompatActivity {
 
     private static final int GALLERY_REQCODE = 31;
@@ -61,7 +63,7 @@ public class AddDishActivity extends AppCompatActivity {
         name_et = findViewById(R.id.dish_name_et);
         desc_et = findViewById(R.id.dish_desc_et);
         price_et = findViewById(R.id.dish_price_et);
-        Button add_image_btn = findViewById(R.id.add_image_btn);
+        ImageView add_image_btn = findViewById(R.id.add_image_btn);
         Button save_btn = findViewById(R.id.save_dish_btn);
         qty_inc_dec = findViewById(R.id.qty_inc_dec);
 
