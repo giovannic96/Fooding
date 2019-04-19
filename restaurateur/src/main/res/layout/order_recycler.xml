@@ -51,7 +51,7 @@
                 android:paddingEnd="2dp"
                 android:paddingBottom="8dp"
                 android:text="7.48€"
-                android:textColor="@color/colorAccentLight"
+                android:textColor="@color/secondaryColor"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
