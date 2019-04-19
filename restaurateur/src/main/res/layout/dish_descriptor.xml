@@ -71,38 +71,48 @@
             android:textAppearance="@android:style/TextAppearance.Material.Large"
             app:allow_negative_values="false" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginTop="30dp">
 
-            <TextView
-                android:id="@+id/qty_tv"
+            <ImageButton
+                android:id="@+id/qty_dec"
+                android:layout_width="30dp"
+                android:layout_height="60dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:backgroundTint="@color/primaryColor"
+                android:src="@drawable/ic_remove_white_24dp"
+                tools:ignore="SmallSp">
+            </ImageButton>
+            <EditText
+                android:id="@+id/qty_et"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
                 android:layout_marginStart="0dp"
                 android:layout_marginTop="0dp"
+                android:layout_weight="3"
                 android:gravity="center"
-                android:textAppearance="@android:style/TextAppearance.Material.Large"
-                android:text="@string/select_qty" />
-
-            <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
-                android:id="@+id/qty_inc_dec"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:inputType="number"
+                android:maxLength="9"
+                android:text="@string/zero"
+                android:textAppearance="@android:style/TextAppearance.Material.Large" />
+            <ImageButton
+                android:id="@+id/qty_inc"
+                android:layout_width="30dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:layout_toEndOf="@+id/qty_tv"
-                android:layout_marginStart="30dp"
-                app:backGroundColor="@color/secondaryColor"
-                app:initialNumber="0"
-                app:finalNumber="10000"
-                app:textSize="9sp"
-                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:backgroundTint="@color/secondaryColor"
+                android:src="@drawable/ic_add_white_24dp"
                 tools:ignore="SmallSp">
-            </com.cepheuen.elegantnumberbutton.view.ElegantNumberButton>
-        </RelativeLayout>
+            </ImageButton>
+        </LinearLayout>
 
         <Button
             android:id="@+id/save_dish_btn"

@@ -1,6 +1,7 @@
 package com.example.ristoratore;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -14,27 +15,24 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blackcat.currencyedittext.CurrencyEditText;
-import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.example.ristoratore.menu.Dish;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AddDishActivity extends AppCompatActivity {
 
@@ -47,9 +45,11 @@ public class AddDishActivity extends AppCompatActivity {
     private ImageView photo;
     private EditText name_et;
     private EditText desc_et;
+    private EditText qty_et;
     private CurrencyEditText price_et;
     private Uri selectedPhoto;
-    private ElegantNumberButton qty_inc_dec;
+    private ImageButton qty_inc;
+    private ImageButton qty_dec;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +63,11 @@ public class AddDishActivity extends AppCompatActivity {
         name_et = findViewById(R.id.dish_name_et);
         desc_et = findViewById(R.id.dish_desc_et);
         price_et = findViewById(R.id.dish_price_et);
+        qty_et = findViewById(R.id.qty_et);
         ImageView add_image_btn = findViewById(R.id.add_image_btn);
         Button save_btn = findViewById(R.id.save_dish_btn);
-        qty_inc_dec = findViewById(R.id.qty_inc_dec);
+        qty_inc = findViewById(R.id.qty_inc);
+        qty_dec = findViewById(R.id.qty_dec);
 
         name_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         desc_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
@@ -82,7 +84,40 @@ public class AddDishActivity extends AppCompatActivity {
                 selectImage();
         });
 
-        qty_inc_dec.setOnClickListener((ElegantNumberButton.OnClickListener) view -> {
+        qty_inc.setOnClickListener(v -> {
+            String value = qty_et.getText().toString();
+            Integer val = Integer.parseInt(value);
+            val++;
+            qty_et.setText(String.valueOf(val));
+        });
+
+        qty_dec.setOnClickListener(v -> {
+            String value = qty_et.getText().toString();
+            Integer val = Integer.parseInt(value);
+            if(!val.equals(0)) {
+                val--;
+                qty_et.setText(String.valueOf(val));
+            }
+        });
+
+        qty_et.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String enteredString = s.toString();
+                if(enteredString.equals(""))
+                    qty_et.setText("0");
+                if (enteredString.startsWith("0") && enteredString.length() > 1) {
+                    qty_et.setText(qty_et.getText().toString().substring(1));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
         });
 
         save_btn.setOnClickListener(v -> {
@@ -91,9 +126,13 @@ public class AddDishActivity extends AppCompatActivity {
             ImageView photo = this.photo;
             Long priceLong = price_et.getRawValue();
             String price = price_et.formatCurrency(price_et.getRawValue());
-            int qty_tv = Integer.parseInt(qty_inc_dec.getNumber());
+            int qty;
+            if(qty_et.getText().toString().matches("^-?\\d+$"))
+                qty = Integer.parseInt(qty_et.getText().toString());
+            else
+                qty = 1;
 
-            dish = new Dish(name, description, photo, price, priceLong, qty_tv, selectedPhoto != null ? selectedPhoto.toString() : "");
+            dish = new Dish(name, description, photo, price, priceLong, qty, selectedPhoto != null ? selectedPhoto.toString() : "");
             finish();
         });
     }
