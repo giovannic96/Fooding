@@ -10,20 +10,32 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/avatar"
+        <RelativeLayout
+            android:layout_alignParentStart="true"
             android:layout_marginTop="20dp"
-            android:clickable="true"
             android:layout_gravity="center"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:contentDescription="@string/photo"
-            android:src="@drawable/ic_launcher_foreground"
-            app:civ_border_color="#d1b1b1"
-            app:civ_fill_color="@color/colorAccent"
-            android:foregroundGravity="center"
-            android:focusable="true" />
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:id="@+id/rel_layout">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/avatar"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:src="@mipmap/deliveryman" />
+
+            <ImageView
+                android:id="@+id/add_image_btn"
+                android:theme="@style/MyRippleTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_centerInParent="true"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/ic_photo_camera_white_48dp" />
+        </RelativeLayout>
         <EditText
             android:id="@+id/name_et"
             android:layout_width="match_parent"
