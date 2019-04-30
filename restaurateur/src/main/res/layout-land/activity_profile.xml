@@ -20,7 +20,7 @@
             android:layout_width="240dp"
             android:layout_height="240dp"
             android:contentDescription="@string/photo"
-            android:src="@drawable/ic_launcher_foreground"
+            android:src="@mipmap/chef_256"
             app:civ_border_color="#d1b1b1"
             app:civ_fill_color="@color/primaryLightColor"
             android:foregroundGravity="center"
