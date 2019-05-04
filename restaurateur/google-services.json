@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "467478656177",
+    "firebase_url": "https://fooding-817f7.firebaseio.com",
+    "project_id": "fooding-817f7",
+    "storage_bucket": "fooding-817f7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:467478656177:android:8f064d1000546de8",
+        "android_client_info": {
+          "package_name": "com.example.biker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "467478656177-fhfuvh6fkvuntlqhqkoo12hm9j9tq24m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0Vts3JvX8lEN4e0qncDDQrksBo2ULQvQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "467478656177-fhfuvh6fkvuntlqhqkoo12hm9j9tq24m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:467478656177:android:f082817b9833fb09",
+        "android_client_info": {
+          "package_name": "com.example.fooding"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "467478656177-fhfuvh6fkvuntlqhqkoo12hm9j9tq24m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0Vts3JvX8lEN4e0qncDDQrksBo2ULQvQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "467478656177-fhfuvh6fkvuntlqhqkoo12hm9j9tq24m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:467478656177:android:2335da413d0b19c2",
+        "android_client_info": {
+          "package_name": "com.example.ristoratore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "467478656177-fhfuvh6fkvuntlqhqkoo12hm9j9tq24m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0Vts3JvX8lEN4e0qncDDQrksBo2ULQvQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "467478656177-fhfuvh6fkvuntlqhqkoo12hm9j9tq24m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

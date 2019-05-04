@@ -20,6 +20,9 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
@@ -119,6 +122,19 @@ public class MainActivity extends AppCompatActivity {
         if(title.equals("PROFILE")) {
             Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
             startActivity(i);
+        }
+        if(title.equals("SIGN UP")) {
+            Intent i = new Intent(getApplicationContext(), SignupActivity.class);
+            startActivity(i);
+        }
+        if(title.equals("SIGN IN")) {
+            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(i);
+        }
+        if(title.equals("SIGN OUT")) {
+            FirebaseAuth.getInstance().signOut();
+            Toast.makeText(this, "User signed out.",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 }

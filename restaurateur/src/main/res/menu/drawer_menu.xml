@@ -14,5 +14,17 @@
             android:id="@+id/order_btn"
             android:icon="@drawable/ic_assignment_late_black_24dp"
             android:title="@string/orders_btn" />
+        <item
+            android:id="@+id/signup_btn"
+            android:icon="@drawable/ic_add_circle_outline_black_24dp"
+            android:title="@string/signup_btn" />
+        <item
+            android:id="@+id/signin_btn"
+            android:icon="@drawable/ic_check_black_24dp"
+            android:title="@string/signin_btn" />
+        <item
+            android:id="@+id/signout_btn"
+            android:icon="@drawable/ic_clear_black_24dp"
+            android:title="@string/signout_btn" />
     </group>
 </menu>

@@ -20,6 +20,9 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
@@ -47,16 +50,16 @@ public class MainActivity extends AppCompatActivity {
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        dailyoffer_btn = findViewById(R.id.dailyoffer_btn);
-        orders_btn = findViewById(R.id.order_btn);
+        dailyoffer_btn = findViewById(R.id.dailyoffer_main_btn);
+        orders_btn = findViewById(R.id.order_main_btn);
 
         orders_btn.setOnClickListener(e -> {
-                Intent i = new Intent(getApplicationContext(), OrderActivity.class);
+                Intent i = new Intent(this, OrderActivity.class);
                 startActivity(i);
         });
 
         dailyoffer_btn.setOnClickListener(v -> {
-                Intent i = new Intent(getApplicationContext(), DailyOfferActivity.class);
+                Intent i = new Intent(this, DailyOfferActivity.class);
                 startActivity(i);
         });
 
@@ -94,6 +97,19 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout = findViewById(R.id.drawer_layout);
         nv = findViewById(R.id.nav_view);
         nv.setNavigationItemSelectedListener(navSelectListener);
+
+        dailyoffer_btn = findViewById(R.id.dailyoffer_main_btn);
+        orders_btn = findViewById(R.id.order_main_btn);
+
+        orders_btn.setOnClickListener(e -> {
+            Intent i = new Intent(this, OrderActivity.class);
+            startActivity(i);
+        });
+
+        dailyoffer_btn.setOnClickListener(v -> {
+            Intent i = new Intent(this, DailyOfferActivity.class);
+            startActivity(i);
+        });
 
         View header = nv.getHeaderView(0);
         avatar = header.findViewById(R.id.avatar);
@@ -143,6 +159,19 @@ public class MainActivity extends AppCompatActivity {
         else if(title.equals("ORDERS")){
             Intent i = new Intent(getApplicationContext(), OrderActivity.class);
             startActivity(i);
+        }
+        if(title.equals("SIGN UP")) {
+            Intent i = new Intent(getApplicationContext(), SignupActivity.class);
+            startActivity(i);
+        }
+        if(title.equals("SIGN IN")) {
+            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(i);
+        }
+        if(title.equals("SIGN OUT")) {
+            FirebaseAuth.getInstance().signOut();
+            Toast.makeText(this, "User signed out.",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 }
