@@ -17,9 +17,19 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -40,8 +50,11 @@ public class EditActivity extends AppCompatActivity {
     public static final String MAIL_PREFS = "mail_prefs";
     public static final String CARD_PREFS = "card_prefs";
     public static final String INFO_PREFS = "info_prefs";
+    public static final String PASSWORD_PREFS = "password_prefs";
 
+    private FirebaseAuth mAuth;
     private CircleImageView avatar;
+    private ImageView addImage;
     private Button save_btn;
     private EditText name_et;
     private EditText addr_et;
@@ -49,6 +62,7 @@ public class EditActivity extends AppCompatActivity {
     private EditText mail_et;
     private EditText card_et;
     private EditText info_et;
+    private EditText password_et;
     private Uri selectedImage;
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
@@ -57,6 +71,11 @@ public class EditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
+        //mAuth=FirebaseAuth.getInstance();
+        //database = FirebaseDatabase.getInstance().getReference();
+
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = preferences.edit();
@@ -68,11 +87,14 @@ public class EditActivity extends AppCompatActivity {
         mail_et = findViewById(R.id.mail_et);
         card_et = findViewById(R.id.card_et);
         info_et = findViewById(R.id.info_et);
+        password_et = findViewById(R.id.password_et);
+        addImage = findViewById(R.id.add_image_btn);
+
 
         if(preferences.contains(EditActivity.URI_PREFS)) {
             avatar.setImageURI(Uri.parse(preferences.getString(EditActivity.URI_PREFS, "")));
             if (avatar.getDrawable() == null)
-                avatar.setImageResource(R.drawable.ic_launcher_foreground);
+                avatar.setImageResource(R.mipmap.iconmonstr_256);
         }
         if(preferences.contains(EditActivity.NAME_PREFS))
             name_et.setText(preferences.getString(NAME_PREFS, ""));
@@ -95,13 +117,41 @@ public class EditActivity extends AppCompatActivity {
             }
         }
 
-        avatar.setOnClickListener(e -> {
+        addImage.setOnClickListener(e -> {
             if(isStoragePermissionGranted()) {
                 selectImage();
             }
         });
 
         save_btn.setOnClickListener(e -> {
+
+            /*mAuth.createUserWithEmailAndPassword(mail_et.getText().toString(), password_et.getText().toString()).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if(task.isSuccessful()){
+                        Toast.makeText(EditActivity.this, "Authentication success.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Toast.makeText(EditActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
+                        finish();
+
+                    }
+                }
+            });
+
+            mAuth.signInWithEmailAndPassword(mail_et.getText().toString(), password_et.getText().toString());
+            FirebaseUser user=mAuth.getCurrentUser();
+            String uid=user.getUid();
+            DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+            database.child("message").setValue("Hello world!");
+            database.child("customer").child(uid).child("name").setValue(name_et.getText().toString());
+            database.child("customer").child(uid).child("address").setValue(addr_et.getText().toString());
+            database.child("customer").child(uid).child("telephone").setValue(tel_et.getText().toString());
+            database.child("customer").child(uid).child("card_num").setValue(card_et.getText().toString());
+            database.child("customer").child(uid).child("info").setValue(info_et.getText().toString());*/
+
             if(!(name_et.getText().toString().equals(preferences.getString(NAME_PREFS, "")))) {
                 editor.putString(NAME_PREFS, name_et.getText().toString());
                 editor.apply();
@@ -126,14 +176,35 @@ public class EditActivity extends AppCompatActivity {
                 editor.putString(INFO_PREFS, info_et.getText().toString());
                 editor.apply();
             }
+            if(!(password_et.getText().toString().equals(preferences.getString(PASSWORD_PREFS, "")))) {
+                editor.putString(PASSWORD_PREFS, password_et.getText().toString());
+                editor.apply();
+            }
             if(selectedImage != null && !(selectedImage.toString().equals(preferences.getString(URI_PREFS, "")))) {
                 editor.putString(URI_PREFS, selectedImage.toString());
                 editor.apply();
             }
 
             finish();
-        });
+            });
+
+
+
+
     }
+
+    /*@Override
+    public void onStart(){
+        super.onStart();
+        FirebaseUser currentUser =mAuth.getCurrentUser();
+    }*/
+
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        finish();
+        return true;
+    }
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {

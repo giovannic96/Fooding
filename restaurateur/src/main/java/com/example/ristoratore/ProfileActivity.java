@@ -1,18 +1,18 @@
 package com.example.ristoratore;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.TextView;
+        import android.content.SharedPreferences;
+        import android.net.Uri;
+        import android.preference.PreferenceManager;
+        import android.support.v7.app.AppCompatActivity;
+        import android.os.Bundle;
+        import android.view.Menu;
+        import android.view.MenuItem;
+        import android.widget.TextView;
 
-import java.util.Objects;
+        import java.util.Objects;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+        import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity {
 

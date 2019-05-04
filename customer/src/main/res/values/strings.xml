@@ -8,4 +8,11 @@
     <string name="cust_card">Card number</string>
     <string name="cust_info">Extra Information</string>
     <string name="save_btn">Save</string>
+    <string name="profile_btn">PROFILE</string>
+    <string name="drawer_open">drawer open</string>
+    <string name="drawer_close">drawer close</string>
+    <string name="password">Password</string>
+    <string name="signup_btn">SIGN UP</string>
+    <string name="signin_btn">SIGN IN</string>
+    <string name="signout_btn">SIGN OUT</string>
 </resources>

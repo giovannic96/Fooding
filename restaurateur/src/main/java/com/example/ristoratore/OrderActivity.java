@@ -3,6 +3,7 @@ package com.example.ristoratore;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -41,7 +42,7 @@ public class OrderActivity extends AppCompatActivity implements OrderViewAdapter
     String desc1 = "A baked potato with a fluffy interior and a crisp skin. It comes served with a butter filling";
     String desc2 = "Made by roasting carrots with olive oil, salt, and pepper, until they’re golden on the edges and tender throughout.";
     String desc3 = "The garlicky marinade on these chops highlights the lamb's slightly gamey flavor";
-    Dish Potato = new Dish("Baked Potatoes with Butter", desc1,null,"5 €",(long)5,11,null);
+    Dish Potato = new Dish("Baked Potatoes with Butter", desc1,null,"5 €",(long)5,11, null);
     Dish Carrot = new Dish("Roasted Carrots", desc2,null,"4.50 €",(long)4.50,21,null);
     Dish Meat = new Dish("Grilled Lamb Chops with Roasted Garlic", desc3,null,"8 €",(long)8,13,null);
     ArrayList<Dish> dishL1 = new ArrayList<Dish>(Arrays.asList(Potato,Carrot));
