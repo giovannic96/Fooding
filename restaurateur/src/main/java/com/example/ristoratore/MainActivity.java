@@ -148,6 +148,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void choiceActivity(String title) {
         if(title.equals("PROFILE")) {
+            if(FirebaseAuth.getInstance().getCurrentUser()==null){
+                Toast.makeText(this, "Error: user not signed in.",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
             startActivity(i);
         }

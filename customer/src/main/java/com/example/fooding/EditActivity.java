@@ -28,8 +28,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -53,6 +57,8 @@ public class EditActivity extends AppCompatActivity {
     public static final String PASSWORD_PREFS = "password_prefs";
 
     private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private DatabaseReference database;
     private CircleImageView avatar;
     private ImageView addImage;
     private Button save_btn;
@@ -64,21 +70,21 @@ public class EditActivity extends AppCompatActivity {
     private EditText info_et;
     private EditText password_et;
     private Uri selectedImage;
-    SharedPreferences preferences;
-    SharedPreferences.Editor editor;
+    private String uid;
+    //SharedPreferences preferences;
+    //SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
-        //mAuth=FirebaseAuth.getInstance();
-        //database = FirebaseDatabase.getInstance().getReference();
+        mAuth=FirebaseAuth.getInstance();
+        currentUser=mAuth.getCurrentUser();
+        database = FirebaseDatabase.getInstance().getReference();
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        editor = preferences.edit();
         avatar = findViewById(R.id.avatar);
         save_btn = findViewById(R.id.avatar_btn);
         name_et = findViewById(R.id.name_et);
@@ -89,6 +95,11 @@ public class EditActivity extends AppCompatActivity {
         info_et = findViewById(R.id.info_et);
         password_et = findViewById(R.id.password_et);
         addImage = findViewById(R.id.add_image_btn);
+
+        //////OLD VERSION WITH SHARED PREFERENCES ////////
+
+        /*preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = preferences.edit();
 
 
         if(preferences.contains(EditActivity.URI_PREFS)) {
@@ -107,7 +118,71 @@ public class EditActivity extends AppCompatActivity {
         if(preferences.contains(EditActivity.CARD_PREFS))
             card_et.setText(preferences.getString(CARD_PREFS, ""));
         if(preferences.contains(EditActivity.INFO_PREFS))
-            info_et.setText(preferences.getString(INFO_PREFS, ""));
+            info_et.setText(preferences.getString(INFO_PREFS, ""));*/
+
+
+        uid=currentUser.getUid();
+        mail_et.setText(currentUser.getEmail());
+        database.child("customer").child(uid).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    name_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("customer").child(uid).child("address").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    addr_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("customer").child(uid).child("telephone").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    tel_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("customer").child(uid).child("cardnum").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    card_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("customer").child(uid).child("info").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    info_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         if (savedInstanceState != null){
             if(savedInstanceState.containsKey("uri"))
@@ -152,7 +227,9 @@ public class EditActivity extends AppCompatActivity {
             database.child("customer").child(uid).child("card_num").setValue(card_et.getText().toString());
             database.child("customer").child(uid).child("info").setValue(info_et.getText().toString());*/
 
-            if(!(name_et.getText().toString().equals(preferences.getString(NAME_PREFS, "")))) {
+            ////////OLD VERSION WITH SHARED PREFERENCES//////////
+
+            /*if(!(name_et.getText().toString().equals(preferences.getString(NAME_PREFS, "")))) {
                 editor.putString(NAME_PREFS, name_et.getText().toString());
                 editor.apply();
             }
@@ -183,7 +260,18 @@ public class EditActivity extends AppCompatActivity {
             if(selectedImage != null && !(selectedImage.toString().equals(preferences.getString(URI_PREFS, "")))) {
                 editor.putString(URI_PREFS, selectedImage.toString());
                 editor.apply();
-            }
+            }*/
+
+            currentUser.updateEmail(mail_et.getText().toString());
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(name_et.getText().toString()).build();
+            currentUser.updateProfile(profileUpdates);
+
+            database.child("customer").child(uid).child("address").setValue(addr_et.getText().toString());
+            database.child("customer").child(uid).child("telephone").setValue(tel_et.getText().toString());
+            database.child("customer").child(uid).child("cardnum").setValue(card_et.getText().toString());
+            database.child("customer").child(uid).child("info").setValue(info_et.getText().toString());
+            database.child("customer").child(uid).child("name").setValue(name_et.getText().toString());
 
             finish();
             });
@@ -193,11 +281,11 @@ public class EditActivity extends AppCompatActivity {
 
     }
 
-    /*@Override
+    @Override
     public void onStart(){
         super.onStart();
-        FirebaseUser currentUser =mAuth.getCurrentUser();
-    }*/
+        currentUser =mAuth.getCurrentUser();
+    }
 
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -209,8 +297,8 @@ public class EditActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(selectedImage != null && !(selectedImage.toString().equals(preferences.getString(URI_PREFS, ""))))
-            outState.putParcelable("uri", selectedImage);
+        //if(selectedImage != null && !(selectedImage.toString().equals(preferences.getString(URI_PREFS, ""))))
+            //outState.putParcelable("uri", selectedImage);
     }
 
     public boolean isStoragePermissionGranted() {
