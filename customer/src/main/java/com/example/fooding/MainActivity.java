@@ -23,6 +23,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
 
@@ -119,22 +122,30 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void choiceActivity(String title) {
-        if(title.equals("PROFILE")) {
+        if (title.equals("PROFILE")) {
+            if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+                Toast.makeText(this, "Error: user not signed in.",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
             startActivity(i);
         }
-        if(title.equals("SIGN UP")) {
+        if (title.equals("SIGN UP")) {
             Intent i = new Intent(getApplicationContext(), SignupActivity.class);
             startActivity(i);
+
         }
-        if(title.equals("SIGN IN")) {
+        if (title.equals("SIGN IN")) {
             Intent i = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(i);
         }
-        if(title.equals("SIGN OUT")) {
+        if (title.equals("SIGN OUT")) {
             FirebaseAuth.getInstance().signOut();
             Toast.makeText(this, "User signed out.",
                     Toast.LENGTH_SHORT).show();
         }
     }
+
 }
+
