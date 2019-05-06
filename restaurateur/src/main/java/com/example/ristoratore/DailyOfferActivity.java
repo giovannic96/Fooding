@@ -15,6 +15,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import com.example.ristoratore.menu.Dish;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
@@ -31,10 +35,15 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
     private static final String PREF_NAME = "DishList sp";
     private static final String DISHLIST_NAME = "Dishes List";
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private DatabaseReference database;
+
     private RecyclerView rView;
     private RecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager rLayoutManager;
     ArrayList<Dish> dishes;
+    private String uid;
 
 
     @Override
@@ -42,8 +51,14 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dailyoffer);
 
+        mAuth=FirebaseAuth.getInstance();
+        currentUser=mAuth.getCurrentUser();
+        database = FirebaseDatabase.getInstance().getReference();
+
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        uid=currentUser.getUid();
 
         loadData();
         buildRecyclerView();
@@ -117,6 +132,12 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
     }
 
     @Override
+    public void onStart(){
+        super.onStart();
+        currentUser =mAuth.getCurrentUser();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         loadData();
@@ -147,6 +168,7 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
                 dialogBuilder.setTitle("Are you sure you want to delete this dish?");
                 dialogBuilder.setItems(choices, (dial, choice) -> {
                     if (choices[choice].equals("Yes")) {
+                        database.child("restaurateur").child(uid).child("menu").child(dishes.get(position).getName()).removeValue();
                         dishes.remove(position);
                         adapter.notifyItemRemoved(position);
                         saveData();
