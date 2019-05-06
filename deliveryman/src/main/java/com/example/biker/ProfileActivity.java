@@ -4,11 +4,22 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Objects;
 
@@ -16,6 +27,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private DatabaseReference database;
+    private StorageReference storage;
     SharedPreferences preferences;
     private CircleImageView avatar;
     private TextView name_tv;
@@ -30,11 +45,16 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        mAuth=FirebaseAuth.getInstance();
+        currentUser=mAuth.getCurrentUser();
+        database= FirebaseDatabase.getInstance().getReference();
+        storage= FirebaseStorage.getInstance().getReference();
+
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //preferences = PreferenceManager.getDefaultSharedPreferences(this);
         avatar = findViewById(R.id.avatar);
         name_tv = findViewById(R.id.name_text);
         tel_tv = findViewById(R.id.tel_text);
@@ -47,7 +67,8 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(preferences.contains(EditActivity.URI_PREFS)) {
+        //OLD VERSION WITH PREFERENCES
+        /*if(preferences.contains(EditActivity.URI_PREFS)) {
             avatar.setImageURI(Uri.parse(preferences.getString(EditActivity.URI_PREFS, "")));
             if(avatar.getDrawable() == null)
                 avatar.setImageResource(R.mipmap.deliveryman);
@@ -63,7 +84,71 @@ public class ProfileActivity extends AppCompatActivity {
         if(preferences.contains(EditActivity.AREA_PREFS))
             area_tv.setText(preferences.getString(EditActivity.AREA_PREFS, ""));
         if(preferences.contains(EditActivity.INFO_PREFS))
-            info_tv.setText(preferences.getString(EditActivity.INFO_PREFS, ""));
+            info_tv.setText(preferences.getString(EditActivity.INFO_PREFS, ""));*/
+
+
+        String uid=currentUser.getUid();
+        mail_tv.setText(currentUser.getEmail());
+        database.child("biker").child(uid).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    name_tv.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("biker").child(uid).child("work_hours").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    hour_tv.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("biker").child(uid).child("telephone").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    tel_tv.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("biker").child(uid).child("work_area").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    area_tv.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("biker").child(uid).child("info").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    info_tv.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override

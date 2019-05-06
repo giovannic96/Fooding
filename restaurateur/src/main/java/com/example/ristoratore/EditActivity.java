@@ -24,6 +24,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,6 +53,9 @@ public class EditActivity extends AppCompatActivity {
     public static final String HOUR_PREFS = "hour_prefs";
     public static final String INFO_PREFS = "info_prefs";
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private DatabaseReference database;
     private CircleImageView avatar;
     private ImageView addImage;
     private Button save_btn;
@@ -54,19 +66,23 @@ public class EditActivity extends AppCompatActivity {
     private EditText hour_et;
     private EditText info_et;
     private Uri selectedImage;
-    SharedPreferences preferences;
-    SharedPreferences.Editor editor;
+    private String uid;
+    //SharedPreferences preferences;
+    //SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
+        mAuth=FirebaseAuth.getInstance();
+        currentUser=mAuth.getCurrentUser();
+        database = FirebaseDatabase.getInstance().getReference();
+
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        editor = preferences.edit();
+
         avatar = findViewById(R.id.avatar);
         save_btn = findViewById(R.id.avatar_btn);
         name_et = findViewById(R.id.name_et);
@@ -81,6 +97,11 @@ public class EditActivity extends AppCompatActivity {
         addr_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         info_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         hour_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);*/
+
+        //////OLD VERSION WITH SHARED PREFERENCES ////////
+
+        /*preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = preferences.edit();
 
         if(preferences.contains(EditActivity.URI_PREFS)) {
             avatar.setImageURI(Uri.parse(preferences.getString(EditActivity.URI_PREFS, "")));
@@ -98,7 +119,70 @@ public class EditActivity extends AppCompatActivity {
         if(preferences.contains(EditActivity.HOUR_PREFS))
             hour_et.setText(preferences.getString(HOUR_PREFS, ""));
         if(preferences.contains(EditActivity.INFO_PREFS))
-            info_et.setText(preferences.getString(INFO_PREFS, ""));
+            info_et.setText(preferences.getString(INFO_PREFS, ""));*/
+
+        uid=currentUser.getUid();
+        mail_et.setText(currentUser.getEmail());
+        database.child("restaurateur").child(uid).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    name_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("restaurateur").child(uid).child("work_hours").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    hour_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("restaurateur").child(uid).child("telephone").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    tel_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("restaurateur").child(uid).child("address").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    addr_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("restaurateur").child(uid).child("info").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    info_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         if (savedInstanceState != null){
             if(savedInstanceState.containsKey("uri"))
@@ -115,7 +199,11 @@ public class EditActivity extends AppCompatActivity {
         });
 
         save_btn.setOnClickListener(e -> {
-            if(!(name_et.getText().toString().equals(preferences.getString(NAME_PREFS, "")))) {
+
+
+            ////////OLD VERSION WITH SHARED PREFERENCES//////////
+
+            /*if(!(name_et.getText().toString().equals(preferences.getString(NAME_PREFS, "")))) {
                 editor.putString(NAME_PREFS, name_et.getText().toString());
                 editor.apply();
             }
@@ -142,9 +230,28 @@ public class EditActivity extends AppCompatActivity {
             if(selectedImage != null && !(selectedImage.toString().equals(preferences.getString(URI_PREFS, "")))) {
                 editor.putString(URI_PREFS, selectedImage.toString());
                 editor.apply();
-            }
+            }*/
+
+            currentUser.updateEmail(mail_et.getText().toString());
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(name_et.getText().toString()).build();
+            currentUser.updateProfile(profileUpdates);
+
+            database.child("restaurateur").child(uid).child("work_hours").setValue(hour_et.getText().toString());
+            database.child("restaurateur").child(uid).child("telephone").setValue(tel_et.getText().toString());
+            database.child("restaurateur").child(uid).child("address").setValue(addr_et.getText().toString());
+            database.child("restaurateur").child(uid).child("info").setValue(info_et.getText().toString());
+            database.child("restaurateur").child(uid).child("name").setValue(name_et.getText().toString());
+
+
             finish();
         });
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        currentUser =mAuth.getCurrentUser();
     }
 
 
@@ -157,8 +264,8 @@ public class EditActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(selectedImage != null && !(selectedImage.toString().equals(preferences.getString(URI_PREFS, ""))))
-            outState.putParcelable("uri", selectedImage);
+        //if(selectedImage != null && !(selectedImage.toString().equals(preferences.getString(URI_PREFS, ""))))
+            //outState.putParcelable("uri", selectedImage);
     }
 
     public boolean isStoragePermissionGranted() {
