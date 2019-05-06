@@ -28,6 +28,10 @@ import android.widget.Toast;
 
 import com.blackcat.currencyedittext.CurrencyEditText;
 import com.example.ristoratore.menu.Dish;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -40,6 +44,10 @@ public class AddDishActivity extends AppCompatActivity {
     private static final int CAM_REQCODE = 32;
     private static final int STORAGE_PERM_CODE = 33;
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private DatabaseReference database;
+
     private Dish dish;
 
     private ImageView photo;
@@ -50,11 +58,16 @@ public class AddDishActivity extends AppCompatActivity {
     private Uri selectedPhoto;
     private ImageButton qty_inc;
     private ImageButton qty_dec;
+    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dish_descriptor);
+
+        mAuth=FirebaseAuth.getInstance();
+        currentUser=mAuth.getCurrentUser();
+        database = FirebaseDatabase.getInstance().getReference();
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -68,6 +81,8 @@ public class AddDishActivity extends AppCompatActivity {
         Button save_btn = findViewById(R.id.save_dish_btn);
         qty_inc = findViewById(R.id.qty_inc);
         qty_dec = findViewById(R.id.qty_dec);
+
+        uid=currentUser.getUid();
 
         //name_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         //desc_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
@@ -133,6 +148,7 @@ public class AddDishActivity extends AppCompatActivity {
                 Toast.makeText(this, "Description field is empty!", Toast.LENGTH_SHORT).show();
                 return;
             }
+            database.child("restaurateur").child(uid).child("menu").child(name).child("description").setValue(description);
             ImageView photo = this.photo;
             Long priceLong = price_et.getRawValue();
             if(priceLong.toString().equals("0"))
@@ -141,6 +157,7 @@ public class AddDishActivity extends AppCompatActivity {
                 return;
             }
             String price = price_et.formatCurrency(price_et.getRawValue());
+            database.child("restaurateur").child(uid).child("menu").child(name).child("price").setValue(price);
             int qty;
             if(qty_et.getText().toString().matches("^-?\\d+$"))
                 qty = Integer.parseInt(qty_et.getText().toString());
@@ -150,9 +167,16 @@ public class AddDishActivity extends AppCompatActivity {
                 Toast.makeText(this, "Quantity is zero!", Toast.LENGTH_SHORT).show();
                 return;
             }
+            database.child("restaurateur").child(uid).child("menu").child(name).child("quantity").setValue(qty);
             dish = new Dish(name, description, photo, price, priceLong, qty, selectedPhoto != null ? selectedPhoto.toString() : "");
             finish();
         });
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        currentUser =mAuth.getCurrentUser();
     }
 
     @Override

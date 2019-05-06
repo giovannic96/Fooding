@@ -28,6 +28,13 @@ import android.widget.Toast;
 
 import com.blackcat.currencyedittext.CurrencyEditText;
 import com.example.ristoratore.menu.Dish;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -42,6 +49,10 @@ public class EditDishActivity extends AppCompatActivity {
     private static final int RESULT_SAVE = 34;
     private static final int RESULT_DELETE = 35;
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private DatabaseReference database;
+
     private Dish dish;
 
     private ImageView photo;
@@ -53,12 +64,16 @@ public class EditDishActivity extends AppCompatActivity {
     private ImageButton qty_inc;
     private ImageButton qty_dec;
     private int position;
+    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.dish_descriptor);
+
+        mAuth=FirebaseAuth.getInstance();
+        currentUser=mAuth.getCurrentUser();
+        database = FirebaseDatabase.getInstance().getReference();
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -75,6 +90,47 @@ public class EditDishActivity extends AppCompatActivity {
 
         //name_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         //desc_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+
+        uid=currentUser.getUid();
+        String name = name_et.getText().toString();
+        database.child("restaurateur").child(uid).child("menu").child(name).child("quantity").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    qty_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        database.child("restaurateur").child(uid).child("menu").child(name).child("description").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    desc_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        database.child("restaurateur").child(uid).child("menu").child(name).child("price").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    price_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         if (savedInstanceState != null) {
             if(savedInstanceState.containsKey("uri_photo")) {
@@ -125,8 +181,8 @@ public class EditDishActivity extends AppCompatActivity {
         });
 
         save_btn.setOnClickListener(v -> {
-            String name = name_et.getText().toString();
-            if(name.isEmpty())
+            String name1 = name_et.getText().toString();
+            if(name1.isEmpty())
             {
                 Toast.makeText(this, "Name field is empty!", Toast.LENGTH_SHORT).show();
                 return;
@@ -137,6 +193,7 @@ public class EditDishActivity extends AppCompatActivity {
                 Toast.makeText(this, "Description field is empty!", Toast.LENGTH_SHORT).show();
                 return;
             }
+
             ImageView photo = this.photo;
             Long priceLong = price_et.getRawValue();
             if(priceLong.toString().equals("0")) {
@@ -144,6 +201,7 @@ public class EditDishActivity extends AppCompatActivity {
                 return;
             }
             String price = price_et.formatCurrency(price_et.getRawValue());
+
             int qty;
             if(qty_et.getText().toString().matches("^-?\\d+$"))
                 qty = Integer.parseInt(qty_et.getText().toString());
@@ -153,8 +211,18 @@ public class EditDishActivity extends AppCompatActivity {
                 Toast.makeText(this, "Quantity is zero!", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            dish = new Dish(name, description, photo, price, priceLong, qty, selectedPhoto != null ? selectedPhoto.toString() : "");
+            if(name.equals(name1)) {
+                database.child("restaurateur").child(uid).child("menu").child(name).child("price").setValue(price);
+                database.child("restaurateur").child(uid).child("menu").child(name).child("description").setValue(description);
+                database.child("restaurateur").child(uid).child("menu").child(name).child("quantity").setValue(qty);
+            }
+            else {
+                database.child("restaurateur").child(uid).child("menu").child(name).removeValue();
+                database.child("restaurateur").child(uid).child("menu").child(name1).child("price").setValue(price);
+                database.child("restaurateur").child(uid).child("menu").child(name1).child("description").setValue(description);
+                database.child("restaurateur").child(uid).child("menu").child(name1).child("quantity").setValue(qty);
+            }
+            dish = new Dish(name1, description, photo, price, priceLong, qty, selectedPhoto != null ? selectedPhoto.toString() : "");
             finish();
         });
 
@@ -170,6 +238,12 @@ public class EditDishActivity extends AppCompatActivity {
         desc_et.setText(d.getDescription(), TextView.BufferType.EDITABLE);
         price_et.setValue(d.getPriceL());
         qty_et.setText(String.valueOf(d.getAvailable_qty()), TextView.BufferType.EDITABLE);
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        currentUser =mAuth.getCurrentUser();
     }
 
     @Override
