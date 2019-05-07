@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/edit_mode"
-        android:icon="@drawable/ic_mode_edit_black_24dp"
+        android:icon="@drawable/ic_mode_edit_black_48dp"
         app:showAsAction="ifRoom"
         android:title="">
     </item>

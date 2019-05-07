@@ -19,7 +19,6 @@
         android:layout_width="160dp"
         android:layout_height="160dp"
         android:contentDescription="@string/photo"
-        android:src="@mipmap/iconmonstr_256"
         app:civ_border_color="#d1b1b1"
         app:civ_fill_color="@color/primaryLightColor"
         android:foregroundGravity="center"
