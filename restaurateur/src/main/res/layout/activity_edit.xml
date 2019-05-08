@@ -44,6 +44,12 @@
         android:hint="@string/cust_name"
         android:layout_marginTop="40dp"
         />
+    <Spinner
+        android:id="@+id/type_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        />
     <EditText
         android:id="@+id/address_et"
         android:layout_width="match_parent"

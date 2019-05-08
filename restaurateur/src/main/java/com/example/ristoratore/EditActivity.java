@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -19,9 +20,16 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,7 +43,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -53,6 +64,8 @@ public class EditActivity extends AppCompatActivity {
     public static final String HOUR_PREFS = "hour_prefs";
     public static final String INFO_PREFS = "info_prefs";
 
+    String[] types = { "Italian","Chinese","Japanese","Mexican","Hamburgers" };
+
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private DatabaseReference database;
@@ -67,6 +80,7 @@ public class EditActivity extends AppCompatActivity {
     private EditText info_et;
     private Uri selectedImage;
     private String uid;
+    private String tmp;
     //SharedPreferences preferences;
     //SharedPreferences.Editor editor;
 
@@ -93,6 +107,63 @@ public class EditActivity extends AppCompatActivity {
         info_et = findViewById(R.id.info_et);
         addImage = findViewById(R.id.add_image_btn);
 
+        Spinner spinner = (Spinner) findViewById(R.id.type_et);
+        String[] types = getResources().getStringArray(R.array.food_types);
+        final List<String> typesList = new ArrayList<>(Arrays.asList(types));
+
+        // Initializing an ArrayAdapter
+        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+                this ,R.layout.support_simple_spinner_dropdown_item, typesList){
+            @Override
+            public boolean isEnabled(int position){
+                if(position == 0)
+                {
+                    // Disable the first item from Spinner
+                    // First item will be use for hint
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            @Override
+            public View getDropDownView(int position, View convertView,
+                                        ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView tv = (TextView) view;
+                if(position == 0){
+                    // Set the hint text color gray
+                    tv.setTextColor(Color.GRAY);
+                }
+                else {
+                    tv.setTextColor(Color.BLACK);
+                }
+                return view;
+            }
+        };
+        spinnerArrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerArrayAdapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedItemText = (String) parent.getItemAtPosition(position);
+                // If user change the default selection
+                // First item is disable and it is used for hint
+                if(position > 0){
+                    // Notify the selected item text
+                    Toast.makeText
+                            (getApplicationContext(), "Selected : " + selectedItemText, Toast.LENGTH_SHORT)
+                            .show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         /*name_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         addr_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         info_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
@@ -128,6 +199,23 @@ public class EditActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(!(dataSnapshot.getValue()==null))
                     name_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("restaurateur").child(uid).child("type").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null)) {
+                    tmp = dataSnapshot.getValue().toString();
+                    if (tmp != null) {
+                        int spinnerPosition = spinnerArrayAdapter.getPosition(tmp);
+                        Spinner.setSelection(spinnerPosition);
+                    }
+                }
             }
 
             @Override
@@ -242,6 +330,7 @@ public class EditActivity extends AppCompatActivity {
             database.child("restaurateur").child(uid).child("address").setValue(addr_et.getText().toString());
             database.child("restaurateur").child(uid).child("info").setValue(info_et.getText().toString());
             database.child("restaurateur").child(uid).child("name").setValue(name_et.getText().toString());
+            database.child("restaurateur").child(uid).child("type").setValue(spinner.getSelectedItem().toString());
 
 
             finish();
