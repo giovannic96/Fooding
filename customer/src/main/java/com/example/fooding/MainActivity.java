@@ -188,6 +188,11 @@ public class MainActivity extends AppCompatActivity {
             Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
             startActivity(i);
         }
+        if (title.equals("BROWSE RESTAURANTS")) {
+            Intent i = new Intent(getApplicationContext(), BrowseActivity.class);
+            startActivity(i);
+
+        }
         if (title.equals("SIGN UP")) {
             Intent i = new Intent(getApplicationContext(), SignupActivity.class);
             startActivity(i);

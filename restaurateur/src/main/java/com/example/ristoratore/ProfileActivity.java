@@ -34,6 +34,7 @@ public class ProfileActivity extends AppCompatActivity {
     SharedPreferences preferences;
     private CircleImageView avatar;
     private TextView name_tv;
+    private TextView type_tv;
     private TextView addr_tv;
     private TextView tel_tv;
     private TextView mail_tv;
@@ -56,6 +57,7 @@ public class ProfileActivity extends AppCompatActivity {
         //preferences = PreferenceManager.getDefaultSharedPreferences(this);
         avatar = findViewById(R.id.avatar);
         name_tv = findViewById(R.id.name_text);
+        type_tv = findViewById(R.id.type_text);
         addr_tv = findViewById(R.id.address_text);
         tel_tv = findViewById(R.id.tel_text);
         mail_tv = findViewById(R.id.mail_text);
@@ -93,6 +95,18 @@ public class ProfileActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(!(dataSnapshot.getValue()==null))
                     name_tv.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("restaurateur").child(uid).child("type").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    type_tv.setText(dataSnapshot.getValue().toString());
             }
 
             @Override
