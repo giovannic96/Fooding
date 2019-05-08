@@ -46,27 +46,16 @@ public class BrowseAdapter extends RecyclerView.Adapter<BrowseAdapter.ViewHolder
     }
 
     @Override
-    public int getItemCount() {int arr = 0;
-
+    public int getItemCount() {
+        int arr = 0;
         try{
             if(itemList.size()==0){
-
                 arr = 0;
-
             }
             else{
-
                 arr=itemList.size();
             }
-
-
-
-        }catch (Exception e){
-
-
-
-        }
-
+        }catch (Exception e){}
         return arr;
     }
 

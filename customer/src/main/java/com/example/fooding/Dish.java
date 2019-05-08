@@ -1,4 +1,4 @@
-package com.example.ristoratore.menu;
+package com.example.fooding;
 
 import android.widget.ImageView;
 

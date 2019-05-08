@@ -157,11 +157,21 @@ public class MainActivity extends AppCompatActivity {
             startActivity(i);
         }
         else if(title.equals("DAILY OFFER")) {
+            if(FirebaseAuth.getInstance().getCurrentUser()==null){
+                Toast.makeText(this, "Error: user not signed in.",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent i = new Intent(getApplicationContext(), DailyOfferActivity.class);
             startActivity(i);
         }
 
         else if(title.equals("ORDERS")){
+            if(FirebaseAuth.getInstance().getCurrentUser()==null){
+                Toast.makeText(this, "Error: user not signed in.",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent i = new Intent(getApplicationContext(), OrderActivity.class);
             startActivity(i);
         }
