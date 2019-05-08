@@ -23,6 +23,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,6 +52,9 @@ public class EditActivity extends AppCompatActivity {
     public static final String AREA_PREFS = "area_prefs";
     public static final String INFO_PREFS = "info_prefs";
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private DatabaseReference database;
     private CircleImageView avatar;
     private ImageView addImage;
     private Button save_btn;
@@ -53,19 +65,23 @@ public class EditActivity extends AppCompatActivity {
     private EditText area_et;
     private EditText info_et;
     private Uri selectedImage;
-    SharedPreferences preferences;
-    SharedPreferences.Editor editor;
+    private String uid;
+    //SharedPreferences preferences;
+    //SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
+        mAuth=FirebaseAuth.getInstance();
+        currentUser=mAuth.getCurrentUser();
+        database = FirebaseDatabase.getInstance().getReference();
+
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        editor = preferences.edit();
+
         avatar = findViewById(R.id.avatar);
         save_btn = findViewById(R.id.avatar_btn);
         name_et = findViewById(R.id.name_et);
@@ -75,6 +91,11 @@ public class EditActivity extends AppCompatActivity {
         area_et = findViewById(R.id.area_et);
         info_et = findViewById(R.id.info_et);
         addImage = findViewById(R.id.add_image_btn);
+
+        //////OLD VERSION WITH SHARED PREFERENCES ////////
+
+        /*preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = preferences.edit();
 
         if(preferences.contains(EditActivity.URI_PREFS)) {
             avatar.setImageURI(Uri.parse(preferences.getString(EditActivity.URI_PREFS, "")));
@@ -92,7 +113,70 @@ public class EditActivity extends AppCompatActivity {
         if(preferences.contains(EditActivity.AREA_PREFS))
             area_et.setText(preferences.getString(AREA_PREFS, ""));
         if(preferences.contains(EditActivity.INFO_PREFS))
-            info_et.setText(preferences.getString(INFO_PREFS, ""));
+            info_et.setText(preferences.getString(INFO_PREFS, ""));*/
+
+        uid=currentUser.getUid();
+        mail_et.setText(currentUser.getEmail());
+        database.child("biker").child(uid).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    name_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("biker").child(uid).child("work_hours").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    hour_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("biker").child(uid).child("telephone").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    tel_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("biker").child(uid).child("work_area").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    area_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("biker").child(uid).child("info").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    info_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
         if (savedInstanceState != null){
@@ -110,7 +194,10 @@ public class EditActivity extends AppCompatActivity {
         });
 
         save_btn.setOnClickListener(e -> {
-            if(!(name_et.getText().toString().equals(preferences.getString(NAME_PREFS, "")))) {
+
+            ////////OLD VERSION WITH SHARED PREFERENCES//////////
+
+            /*if(!(name_et.getText().toString().equals(preferences.getString(NAME_PREFS, "")))) {
                 editor.putString(NAME_PREFS, name_et.getText().toString());
                 editor.apply();
             }
@@ -137,10 +224,27 @@ public class EditActivity extends AppCompatActivity {
             if(selectedImage != null && !(selectedImage.toString().equals(preferences.getString(URI_PREFS, "")))) {
                 editor.putString(URI_PREFS, selectedImage.toString());
                 editor.apply();
-            }
+            }*/
+
+            currentUser.updateEmail(mail_et.getText().toString());
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(name_et.getText().toString()).build();
+            currentUser.updateProfile(profileUpdates);
+
+            database.child("biker").child(uid).child("work_hours").setValue(hour_et.getText().toString());
+            database.child("biker").child(uid).child("telephone").setValue(tel_et.getText().toString());
+            database.child("biker").child(uid).child("work_area").setValue(area_et.getText().toString());
+            database.child("biker").child(uid).child("info").setValue(info_et.getText().toString());
+            database.child("biker").child(uid).child("name").setValue(name_et.getText().toString());
 
             finish();
         });
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        currentUser =mAuth.getCurrentUser();
     }
 
     public boolean onOptionsItemSelected(MenuItem item)
@@ -152,8 +256,8 @@ public class EditActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(selectedImage != null && !(selectedImage.toString().equals(preferences.getString(URI_PREFS, ""))))
-            outState.putParcelable("uri", selectedImage);
+        //if(selectedImage != null && !(selectedImage.toString().equals(preferences.getString(URI_PREFS, ""))))
+            //outState.putParcelable("uri", selectedImage);
     }
 
     public boolean isStoragePermissionGranted() {
