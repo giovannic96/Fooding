@@ -7,6 +7,8 @@ public class Restaurant implements Serializable {
     public String name;
     public String type;
     public String photoUrl;
+    public String uid;
+    public String uri;
 
     public Restaurant() {};
 
@@ -26,6 +28,14 @@ public class Restaurant implements Serializable {
         this.type = type;
     }
 
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
     public String getName() {
         return name;
     }
@@ -34,4 +44,10 @@ public class Restaurant implements Serializable {
         this.name = name;
     }
 
+    public void setUri(String uri) {this.uri=uri;
+    }
+
+    public String getUri() {
+        return uri;
+    }
 }

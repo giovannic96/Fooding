@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -17,8 +18,11 @@ import java.util.ArrayList;
 import com.example.ristoratore.menu.Dish;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
@@ -42,7 +46,7 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
     private RecyclerView rView;
     private RecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager rLayoutManager;
-    ArrayList<Dish> dishes;
+    ArrayList<Dish> dishes = new ArrayList<>();
     private String uid;
 
 
@@ -61,7 +65,7 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
         uid=currentUser.getUid();
 
         loadData();
-        buildRecyclerView();
+
 
         FloatingActionButton fab = findViewById(R.id.fab);
 
@@ -110,15 +114,29 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
     }
 
     private void loadData() {
-        preferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = preferences.getString(DISHLIST_NAME, null);
-        Type type = new TypeToken<ArrayList<Dish>>() {}.getType();
-        dishes = gson.fromJson(json, type);
+        database.child("restaurateur").child(uid).child("menu").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                for(DataSnapshot dataSnapshot1 :dataSnapshot.getChildren()){
 
-        if (dishes == null) {
-            dishes = new ArrayList<>();
-        }
+                    Dish fire = new Dish();
+                    fire.setName(dataSnapshot1.getKey());
+                    fire.setPrice(dataSnapshot1.child("price").getValue().toString());
+                    fire.setDescription(dataSnapshot1.child("description").getValue().toString());
+                    dishes.add(fire);
+
+                }
+                buildRecyclerView();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("Hello", "Failed to read value.", error.toException());
+            }
+        });
     }
 
     private void buildRecyclerView() {
@@ -140,8 +158,8 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
     @Override
     protected void onResume() {
         super.onResume();
-        loadData();
-        buildRecyclerView();
+        //loadData();
+        //buildRecyclerView();
     }
 
     @Override

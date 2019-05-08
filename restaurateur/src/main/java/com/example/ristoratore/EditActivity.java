@@ -64,7 +64,7 @@ public class EditActivity extends AppCompatActivity {
     public static final String HOUR_PREFS = "hour_prefs";
     public static final String INFO_PREFS = "info_prefs";
 
-    String[] types = { "Italian","Chinese","Japanese","Mexican","Hamburgers" };
+
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
@@ -113,7 +113,7 @@ public class EditActivity extends AppCompatActivity {
 
         // Initializing an ArrayAdapter
         final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
-                this ,R.layout.support_simple_spinner_dropdown_item, typesList){
+                EditActivity.this ,R.layout.support_simple_spinner_dropdown_item, typesList){
             @Override
             public boolean isEnabled(int position){
                 if(position == 0)
@@ -213,7 +213,7 @@ public class EditActivity extends AppCompatActivity {
                     tmp = dataSnapshot.getValue().toString();
                     if (tmp != null) {
                         int spinnerPosition = spinnerArrayAdapter.getPosition(tmp);
-                        Spinner.setSelection(spinnerPosition);
+                        spinner.setSelection(spinnerPosition);
                     }
                 }
             }
@@ -330,7 +330,10 @@ public class EditActivity extends AppCompatActivity {
             database.child("restaurateur").child(uid).child("address").setValue(addr_et.getText().toString());
             database.child("restaurateur").child(uid).child("info").setValue(info_et.getText().toString());
             database.child("restaurateur").child(uid).child("name").setValue(name_et.getText().toString());
+
+            database.child("types").child(tmp).child(uid).removeValue();
             database.child("restaurateur").child(uid).child("type").setValue(spinner.getSelectedItem().toString());
+            database.child("types").child(spinner.getSelectedItem().toString()).child(uid).setValue("true");
 
 
             finish();
