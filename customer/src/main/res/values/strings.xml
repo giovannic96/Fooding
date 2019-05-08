@@ -16,4 +16,13 @@
     <string name="signin_btn">SIGN IN</string>
     <string name="signout_btn">SIGN OUT</string>
     <string name="browse_btn">BROWSE RESTAURANTS</string>
+    <string-array name="food_types">
+        <item>Choose a restaurant type</item>
+        <item>Italian</item>
+        <item>Chinese</item>
+        <item>Mexican</item>
+        <item>Japanese</item>
+        <item>Burgers</item>
+        <item>Indian</item>
+    </string-array>
 </resources>
