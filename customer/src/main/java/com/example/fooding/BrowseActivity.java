@@ -50,11 +50,11 @@ public class BrowseActivity extends AppCompatActivity implements BrowseAdapter.I
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 for(DataSnapshot dataSnapshot1 :dataSnapshot.getChildren()){
-
                     Restaurant fire = new Restaurant();
                     fire.setName(dataSnapshot1.child("name").getValue().toString());
                     fire.setType(dataSnapshot1.child("type").getValue().toString());
-                    fire.setPhotoUrl("prova");
+                    fire.setUid(dataSnapshot1.getKey());
+                    fire.setUri(dataSnapshot1.getKey()+"/photo.jpg");
                     list.add(fire);
 
                 }
