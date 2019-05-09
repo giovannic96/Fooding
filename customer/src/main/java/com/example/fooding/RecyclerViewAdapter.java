@@ -15,6 +15,11 @@ import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
@@ -53,8 +58,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.dishDesc.setTypeface(robotoBold);
         holder.dishDesc.setText(dish.getDescription());
 
-        if(dish.getPhotoUri() != null && !dish.getPhotoUri().equals(""))
-            holder.dishPhoto.setImageURI(Uri.parse(dish.getPhotoUri()));
+        StorageReference photoRef= FirebaseStorage.getInstance().getReference().child(dish.getPhotoUri());
+        photoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) { Picasso.get().load(uri).into(holder.dishPhoto); }
+        });
 
         holder.slideAnimator.addUpdateListener(animation -> {
             holder.cardView.getLayoutParams().height = (Integer) animation.getAnimatedValue(); // set as height the value the interpolator is at

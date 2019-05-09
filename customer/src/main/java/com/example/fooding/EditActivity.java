@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.AssetFileDescriptor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -43,13 +45,18 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import id.zelory.compressor.Compressor;
 
 public class EditActivity extends AppCompatActivity {
 
@@ -287,15 +294,13 @@ public class EditActivity extends AppCompatActivity {
             currentUser.updateProfile(profileUpdates);
 
             String description = info_et.getText().toString();
-            if(description.isEmpty())
-            {
+            if (description.isEmpty()) {
                 Toast.makeText(this, "Description field is empty!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             String tel = tel_et.getText().toString();
-            if(tel.isEmpty())
-            {
+            if (tel.isEmpty()) {
                 Toast.makeText(this, "Telephone field is empty!", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -306,26 +311,74 @@ public class EditActivity extends AppCompatActivity {
             database.child("customer").child(uid).child("info").setValue(info_et.getText().toString());
             database.child("customer").child(uid).child("name").setValue(name_et.getText().toString());
 
+            if (selectedImage != null){
+            AssetFileDescriptor afd = null;
+            try {
+                afd = getContentResolver().openAssetFileDescriptor(selectedImage, "r");
+            } catch (FileNotFoundException e1) {
+                e1.printStackTrace();
+            }
+            long fileSize = afd.getLength();
 
-            UploadTask uploadTask=photoref.putFile(selectedImage);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle unsuccessful uploads
-                    Toast.makeText(EditActivity.this, "Upload failure.",
-                            Toast.LENGTH_SHORT).show();
+
+
+            if(fileSize>=1000000) {
+                try {
+                    Bitmap bitmap = Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage), 640, 480, true);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    byte[] data = baos.toByteArray();
+                    UploadTask uploadTask = photoref.putBytes(data);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
+                            Toast.makeText(EditActivity.this, "Upload failure!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                            // ...
+                            Toast.makeText(EditActivity.this, "Upload successful!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                } catch (IOException e1) {
+                    e1.printStackTrace();
                 }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                    // ...
-                    Toast.makeText(EditActivity.this, "Upload successful!",
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
+            }
+
+            else {
+
+                UploadTask uploadTask = photoref.putFile(selectedImage);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        Toast.makeText(EditActivity.this, "Upload failure.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                        // ...
+                        Toast.makeText(EditActivity.this, "Upload successful!",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
             //finish();
+        }
+        else{
+                Toast.makeText(EditActivity.this, "Upload successful!",
+                        Toast.LENGTH_SHORT).show();
+            }
         });
+
 
 
     }

@@ -152,8 +152,6 @@ public class BrowseActivity extends AppCompatActivity implements BrowseAdapter.I
         });
 
 
-
-
     }
 
     @Override

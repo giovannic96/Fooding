@@ -124,8 +124,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        setContentView(R.layout.activity_main_drawer);
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //setContentView(R.layout.activity_main_drawer);
+        //preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
         nv = findViewById(R.id.nav_view);
@@ -184,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         abdToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {};        mDrawerLayout.addDrawerListener(abdToggle);
         abdToggle.syncState();
+
     }
 
     @Override

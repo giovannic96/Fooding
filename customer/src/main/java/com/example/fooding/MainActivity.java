@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         setContentView(R.layout.activity_main_drawer);
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
         nv = findViewById(R.id.nav_view);

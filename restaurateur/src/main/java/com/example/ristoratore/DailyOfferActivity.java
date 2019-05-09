@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -61,6 +62,7 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
         mAuth=FirebaseAuth.getInstance();
         currentUser=mAuth.getCurrentUser();
         database = FirebaseDatabase.getInstance().getReference();
+        storage = FirebaseStorage.getInstance().getReference();
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -99,12 +101,12 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
 
             }
         }
-        else if (requestCode == EDIT_ITEM_REQ && resultCode == RESULT_DELETE){
+        /*else if (requestCode == EDIT_ITEM_REQ && resultCode == RESULT_DELETE){
             int position = data.getIntExtra("position", 0);
             dishes.remove(position);
             adapter.notifyItemRemoved(position);
             saveData();
-        }
+        }*/
     }
 
     private void saveData() {
@@ -191,6 +193,7 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
                 dialogBuilder.setItems(choices, (dial, choice) -> {
                     if (choices[choice].equals("Yes")) {
                         database.child("restaurateur").child(uid).child("menu").child(dishes.get(position).getName()).removeValue();
+                        storage.child(uid+"/"+dishes.get(position).getName()+".jpg").delete();
                         dishes.remove(position);
                         adapter.notifyItemRemoved(position);
                         saveData();
