@@ -28,10 +28,15 @@ import android.widget.Toast;
 
 import com.blackcat.currencyedittext.CurrencyEditText;
 import com.example.ristoratore.menu.Dish;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -47,6 +52,8 @@ public class AddDishActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private DatabaseReference database;
+    private StorageReference storage;
+    private StorageReference photoref;
 
     private Dish dish;
 
@@ -68,6 +75,7 @@ public class AddDishActivity extends AppCompatActivity {
         mAuth=FirebaseAuth.getInstance();
         currentUser=mAuth.getCurrentUser();
         database = FirebaseDatabase.getInstance().getReference();
+        storage= FirebaseStorage.getInstance().getReference();
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -83,6 +91,7 @@ public class AddDishActivity extends AppCompatActivity {
         qty_dec = findViewById(R.id.qty_dec);
 
         uid=currentUser.getUid();
+
 
         //name_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         //desc_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
@@ -168,8 +177,26 @@ public class AddDishActivity extends AppCompatActivity {
                 return;
             }
             database.child("restaurateur").child(uid).child("menu").child(name).child("quantity").setValue(qty);
+            photoref=storage.child(uid+"/"+name+".jpg");
+            UploadTask uploadTask=photoref.putFile(selectedPhoto);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                    Toast.makeText(AddDishActivity.this, "Upload failure.",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                    // ...
+                    Toast.makeText(AddDishActivity.this, "Upload successful!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
             dish = new Dish(name, description, photo, price, priceLong, qty, selectedPhoto != null ? selectedPhoto.toString() : "");
-            finish();
+            //finish();
         });
     }
 

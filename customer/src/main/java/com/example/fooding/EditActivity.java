@@ -286,6 +286,20 @@ public class EditActivity extends AppCompatActivity {
                     .setDisplayName(name_et.getText().toString()).build();
             currentUser.updateProfile(profileUpdates);
 
+            String description = info_et.getText().toString();
+            if(description.isEmpty())
+            {
+                Toast.makeText(this, "Description field is empty!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String tel = tel_et.getText().toString();
+            if(tel.isEmpty())
+            {
+                Toast.makeText(this, "Telephone field is empty!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             database.child("customer").child(uid).child("address").setValue(addr_et.getText().toString());
             database.child("customer").child(uid).child("telephone").setValue(tel_et.getText().toString());
             database.child("customer").child(uid).child("cardnum").setValue(card_et.getText().toString());
@@ -311,9 +325,7 @@ public class EditActivity extends AppCompatActivity {
                 }
             });
             //finish();
-            });
-
-
+        });
 
 
     }

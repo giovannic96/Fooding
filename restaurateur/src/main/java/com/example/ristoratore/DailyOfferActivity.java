@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
@@ -42,6 +43,8 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private DatabaseReference database;
+    private StorageReference storage;
+    private StorageReference photoref;
 
     private RecyclerView rView;
     private RecyclerViewAdapter adapter;
@@ -125,6 +128,7 @@ public class DailyOfferActivity extends AppCompatActivity implements RecyclerVie
                     fire.setName(dataSnapshot1.getKey());
                     fire.setPrice(dataSnapshot1.child("price").getValue().toString());
                     fire.setDescription(dataSnapshot1.child("description").getValue().toString());
+                    fire.setPhotoUri(uid+"/"+dataSnapshot1.getKey()+".jpg");
                     dishes.add(fire);
 
                 }

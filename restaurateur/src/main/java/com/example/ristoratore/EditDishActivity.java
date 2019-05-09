@@ -28,6 +28,8 @@ import android.widget.Toast;
 
 import com.blackcat.currencyedittext.CurrencyEditText;
 import com.example.ristoratore.menu.Dish;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -35,6 +37,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -52,6 +58,8 @@ public class EditDishActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private DatabaseReference database;
+    private StorageReference storage;
+    private StorageReference photoref;
 
     private Dish dish;
 
@@ -74,6 +82,7 @@ public class EditDishActivity extends AppCompatActivity {
         mAuth=FirebaseAuth.getInstance();
         currentUser=mAuth.getCurrentUser();
         database = FirebaseDatabase.getInstance().getReference();
+        storage= FirebaseStorage.getInstance().getReference();
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -93,6 +102,14 @@ public class EditDishActivity extends AppCompatActivity {
 
         uid=currentUser.getUid();
         String name = name_et.getText().toString();
+        photoref=storage.child(uid+"/"+name+".jpg");
+        photoref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(photo);
+            }
+        });
+
         database.child("restaurateur").child(uid).child("menu").child(name).child("quantity").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -222,8 +239,26 @@ public class EditDishActivity extends AppCompatActivity {
                 database.child("restaurateur").child(uid).child("menu").child(name1).child("description").setValue(description);
                 database.child("restaurateur").child(uid).child("menu").child(name1).child("quantity").setValue(qty);
             }
+
+            UploadTask uploadTask=photoref.putFile(selectedPhoto);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                    Toast.makeText(EditDishActivity.this, "Upload failure.",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                    // ...
+                    Toast.makeText(EditDishActivity.this, "Upload successful!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
             dish = new Dish(name1, description, photo, price, priceLong, qty, selectedPhoto != null ? selectedPhoto.toString() : "");
-            finish();
+            //finish();
         });
 
         Intent i = getIntent();
