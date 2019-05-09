@@ -22,7 +22,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
@@ -40,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     ActionBarDrawerToggle abdToggle;
     private ImageButton dailyoffer_btn;
     private ImageButton orders_btn;
+    private StorageReference photoref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main_drawer);
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         dailyoffer_btn = findViewById(R.id.dailyoffer_main_btn);
         orders_btn = findViewById(R.id.order_main_btn);
@@ -71,13 +80,37 @@ public class MainActivity extends AppCompatActivity {
         avatar = header.findViewById(R.id.avatar);
         name_tv = header.findViewById(R.id.textView);
 
-        if(preferences.contains(EditActivity.URI_PREFS)) {
+        /*if(preferences.contains(EditActivity.URI_PREFS)) {
             avatar.setImageURI(Uri.parse(preferences.getString(EditActivity.URI_PREFS, "")));
             if (avatar.getDrawable() == null)
                 avatar.setImageResource(R.mipmap.chef_256);
         }
         if(preferences.contains(EditActivity.NAME_PREFS))
-            name_tv.setText(preferences.getString(NAME_PREFS, ""));
+            name_tv.setText(preferences.getString(NAME_PREFS, "")); */
+
+        if(FirebaseAuth.getInstance().getCurrentUser() == null)
+            avatar.setImageResource(R.mipmap.iconmonstr_256);
+        else{
+            photoref= FirebaseStorage.getInstance().getReference().child(FirebaseAuth.getInstance().getCurrentUser().getUid()+"/photo.jpg");
+            photoref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Picasso.get().load(uri).into(avatar);
+                }
+            });
+            FirebaseDatabase.getInstance().getReference().child("restaurateur").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(!(dataSnapshot.getValue()==null))
+                        name_tv.setText(dataSnapshot.getValue().toString());
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -115,13 +148,37 @@ public class MainActivity extends AppCompatActivity {
         avatar = header.findViewById(R.id.avatar);
         name_tv = header.findViewById(R.id.textView);
 
-        if(preferences.contains(EditActivity.URI_PREFS)) {
+        /*if(preferences.contains(EditActivity.URI_PREFS)) {
             avatar.setImageURI(Uri.parse(preferences.getString(EditActivity.URI_PREFS, "")));
             if (avatar.getDrawable() == null)
                 avatar.setImageResource(R.drawable.ic_launcher_foreground);
         }
         if(preferences.contains(EditActivity.NAME_PREFS))
-            name_tv.setText(preferences.getString(NAME_PREFS, ""));
+            name_tv.setText(preferences.getString(NAME_PREFS, "")); */
+
+        if(FirebaseAuth.getInstance().getCurrentUser() == null)
+            avatar.setImageResource(R.mipmap.iconmonstr_256);
+        else{
+            photoref= FirebaseStorage.getInstance().getReference().child(FirebaseAuth.getInstance().getCurrentUser().getUid()+"/photo.jpg");
+            photoref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Picasso.get().load(uri).into(avatar);
+                }
+            });
+            FirebaseDatabase.getInstance().getReference().child("restaurateur").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(!(dataSnapshot.getValue()==null))
+                        name_tv.setText(dataSnapshot.getValue().toString());
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -187,6 +244,8 @@ public class MainActivity extends AppCompatActivity {
             FirebaseAuth.getInstance().signOut();
             Toast.makeText(this, "User signed out.",
                     Toast.LENGTH_SHORT).show();
+            finish();
+            startActivity(getIntent());
         }
     }
 }

@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
         import android.view.MenuItem;
         import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -20,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
@@ -31,6 +33,7 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseUser currentUser;
     private DatabaseReference database;
     private StorageReference storage;
+    private StorageReference photoref;
     SharedPreferences preferences;
     private CircleImageView avatar;
     private TextView name_tv;
@@ -89,6 +92,15 @@ public class ProfileActivity extends AppCompatActivity {
             info_tv.setText(preferences.getString(EditActivity.INFO_PREFS, ""));*/
 
         String uid=currentUser.getUid();
+
+        photoref=storage.child(uid+"/photo.jpg");
+        photoref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(avatar);
+            }
+        });
+
         mail_tv.setText(currentUser.getEmail());
         database.child("restaurateur").child(uid).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

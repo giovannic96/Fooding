@@ -23,6 +23,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -31,6 +33,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -55,6 +61,8 @@ public class EditActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private DatabaseReference database;
+    private StorageReference storage;
+    private StorageReference photoref;
     private CircleImageView avatar;
     private ImageView addImage;
     private Button save_btn;
@@ -77,6 +85,7 @@ public class EditActivity extends AppCompatActivity {
         mAuth=FirebaseAuth.getInstance();
         currentUser=mAuth.getCurrentUser();
         database = FirebaseDatabase.getInstance().getReference();
+        storage= FirebaseStorage.getInstance().getReference();
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -116,6 +125,13 @@ public class EditActivity extends AppCompatActivity {
             info_et.setText(preferences.getString(INFO_PREFS, ""));*/
 
         uid=currentUser.getUid();
+        photoref=storage.child(uid+"/photo.jpg");
+        photoref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(avatar);
+            }
+        });
         mail_et.setText(currentUser.getEmail());
         database.child("biker").child(uid).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -231,13 +247,58 @@ public class EditActivity extends AppCompatActivity {
                     .setDisplayName(name_et.getText().toString()).build();
             currentUser.updateProfile(profileUpdates);
 
+            String description = info_et.getText().toString();
+            if(description.isEmpty())
+            {
+                Toast.makeText(this, "Description field is empty!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String tel = tel_et.getText().toString();
+            if(tel.isEmpty())
+            {
+                Toast.makeText(this, "Telephone field is empty!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String work_hours = hour_et.getText().toString();
+            if(work_hours.isEmpty())
+            {
+                Toast.makeText(this, "Work hours field is empty!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String work_area = area_et.getText().toString();
+            if(work_area.isEmpty())
+            {
+                Toast.makeText(this, "Address field is empty!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             database.child("biker").child(uid).child("work_hours").setValue(hour_et.getText().toString());
             database.child("biker").child(uid).child("telephone").setValue(tel_et.getText().toString());
             database.child("biker").child(uid).child("work_area").setValue(area_et.getText().toString());
             database.child("biker").child(uid).child("info").setValue(info_et.getText().toString());
             database.child("biker").child(uid).child("name").setValue(name_et.getText().toString());
 
-            finish();
+            UploadTask uploadTask=photoref.putFile(selectedImage);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                    Toast.makeText(EditActivity.this, "Upload failure.",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                    // ...
+                    Toast.makeText(EditActivity.this, "Upload successful!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            //finish();
         });
     }
 
