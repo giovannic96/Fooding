@@ -47,6 +47,8 @@ public class Dish implements Serializable {
         return priceL;
     }
 
+    public void setPriceL(Long priceL) {this.priceL=priceL;}
+
     public String getName() {
         return name;
     }

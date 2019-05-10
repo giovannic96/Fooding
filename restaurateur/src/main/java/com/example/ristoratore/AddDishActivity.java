@@ -178,6 +178,7 @@ public class AddDishActivity extends AppCompatActivity {
             }
             String price = price_et.formatCurrency(price_et.getRawValue());
             database.child("restaurateur").child(uid).child("menu").child(name).child("price").setValue(price);
+            database.child("restaurateur").child(uid).child("menu").child(name).child("priceL").setValue(Long.toString(priceLong));
             int qty;
             if(qty_et.getText().toString().matches("^-?\\d+$"))
                 qty = Integer.parseInt(qty_et.getText().toString());

@@ -24,7 +24,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.util.Currency;
 import java.util.List;
+import java.util.Locale;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
@@ -33,12 +35,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ItemClickListener clkListener;
     private Typeface robotoRegular, robotoBold;
     private ItemLongClickListener longClkListener;
+    private TextView total_tv;
     private Context context;
+    private float total;
+    private Order order;
 
-    RecyclerViewAdapter(Context context, List<Dish> data) {
+    RecyclerViewAdapter(Context context, List<Dish> data, float total, TextView total_tv, Order order) {
         this.layInflater = LayoutInflater.from(context);
         this.itemList = data;
         this.context=context;
+        this.total=total;
+        this.total_tv=total_tv;
+        this.order = order;
         robotoRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
         robotoBold = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-BoldItalic.ttf");
     }
@@ -98,11 +106,31 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(quantity_et.getText().toString().isEmpty())
-                            dish.setQtySel(0);
-                        else
-                            dish.setQtySel(Integer.parseInt(quantity_et.getText().toString()));
 
+                        float price_to_remove=0;
+                        if(quantity_et.getText().toString().isEmpty()||quantity_et.getText().toString().matches("0*")) {
+                            if(dish.getQtySel()!=0)
+                            {
+                                price_to_remove=dish.getPriceL()*dish.getQtySel();
+                                order.dishList.remove(dish);
+                                total-=price_to_remove;
+                            }
+                            dish.setQtySel(0);
+                        }
+                        else
+                        {
+                            if(dish.getQtySel()!=0)
+                            {
+                                price_to_remove=dish.getPriceL()*dish.getQtySel();
+                                total-=price_to_remove;
+                                order.dishList.remove(dish);
+                            }
+                            dish.setQtySel(Integer.parseInt(quantity_et.getText().toString()));
+                            order.dishList.add(dish);
+                            total+=dish.getPriceL()*dish.getQtySel();
+                        }
+
+                        total_tv.setText("Total: "+Float.toString(total/100)+" "+Currency.getInstance(Locale.getDefault()).getSymbol());
                         RecyclerViewAdapter.this.notifyItemChanged(pos);
                         alertDialog.dismiss();
                     }
@@ -119,7 +147,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Remove", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        float price_to_remove=0;
+                        if(dish.getQtySel()!=0)
+                        {
+                            price_to_remove=dish.getPriceL()*dish.getQtySel();
+                            total-=price_to_remove;
+                        }
                         dish.setQtySel(0);
+                        total_tv.setText("Total: "+Float.toString(total/100)+" "+Currency.getInstance(Locale.getDefault()).getSymbol());
+                        order.dishList.remove(dish);
                         RecyclerViewAdapter.this.notifyItemChanged(pos);
                         alertDialog.dismiss();
                     }

@@ -80,6 +80,7 @@ public class EditDishActivity extends AppCompatActivity {
     private int position;
     private String uid;
     private String photoUri;
+    private Long priceL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,6 +163,19 @@ public class EditDishActivity extends AppCompatActivity {
             }
         });
 
+        database.child("restaurateur").child(uid).child("menu").child(name).child("priceL").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    priceL=Long.parseLong(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         if (savedInstanceState != null) {
             if(savedInstanceState.containsKey("uri_photo")) {
                 selectedPhoto = savedInstanceState.getParcelable("uri");
@@ -231,6 +245,7 @@ public class EditDishActivity extends AppCompatActivity {
                 return;
             }
             String price = price_et.formatCurrency(price_et.getRawValue());
+            priceL=priceLong;
 
             int qty;
             if(qty_et.getText().toString().matches("^-?\\d+$"))
@@ -243,6 +258,7 @@ public class EditDishActivity extends AppCompatActivity {
             }
             if(name.equals(name1)) {
                 database.child("restaurateur").child(uid).child("menu").child(name).child("price").setValue(price);
+                database.child("restaurateur").child(uid).child("menu").child(name).child("priceL").setValue(Long.toString(priceL));
                 database.child("restaurateur").child(uid).child("menu").child(name).child("description").setValue(description);
                 database.child("restaurateur").child(uid).child("menu").child(name).child("quantity").setValue(qty);
                 dish = new Dish(name1, description, photo, price, priceLong, qty, photoUri != null ? photoUri : "");
@@ -431,6 +447,7 @@ public class EditDishActivity extends AppCompatActivity {
                 database.child("restaurateur").child(uid).child("menu").child(name1).child("price").setValue(price);
                 database.child("restaurateur").child(uid).child("menu").child(name1).child("description").setValue(description);
                 database.child("restaurateur").child(uid).child("menu").child(name1).child("quantity").setValue(qty);
+                database.child("restaurateur").child(uid).child("menu").child(name1).child("priceL").setValue(Long.toString(priceL));
 
             }
 

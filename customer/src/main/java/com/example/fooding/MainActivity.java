@@ -189,6 +189,11 @@ public class MainActivity extends AppCompatActivity {
             startActivity(i);
         }
         if (title.equals("BROWSE RESTAURANTS")) {
+            if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+                Toast.makeText(this, "Error: user not signed in.",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent i = new Intent(getApplicationContext(), BrowseActivity.class);
             startActivity(i);
 
