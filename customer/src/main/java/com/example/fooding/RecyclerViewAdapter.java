@@ -2,7 +2,9 @@ package com.example.fooding;
 
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -12,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,10 +33,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ItemClickListener clkListener;
     private Typeface robotoRegular, robotoBold;
     private ItemLongClickListener longClkListener;
+    private Context context;
 
     RecyclerViewAdapter(Context context, List<Dish> data) {
         this.layInflater = LayoutInflater.from(context);
         this.itemList = data;
+        this.context=context;
         robotoRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
         robotoBold = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-BoldItalic.ttf");
     }
@@ -58,6 +64,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.dishDesc.setTypeface(robotoBold);
         holder.dishDesc.setText(dish.getDescription());
 
+        if(dish.getQtySel()!=0){
+            holder.qtySel.setTextSize(20);
+            holder.qtySel.setText(Integer.toString(dish.getQtySel()));}
+        else
+        {
+            holder.qtySel.setTextSize(10);
+            holder.qtySel.setText("Order");
+        }
+
+
         StorageReference photoRef= FirebaseStorage.getInstance().getReference().child(dish.getPhotoUri());
         photoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -67,6 +83,54 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.slideAnimator.addUpdateListener(animation -> {
             holder.cardView.getLayoutParams().height = (Integer) animation.getAnimatedValue(); // set as height the value the interpolator is at
             holder.cardView.requestLayout(); // force all layouts to see which ones are affected by this layouts height change
+        });
+
+        holder.qtySel.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                //Intent myIntent = new Intent(view.getContext(), agones.class);
+                //startActivityForResult(myIntent, 0);
+                view = layInflater.inflate(R.layout.dialog_order, null);
+                AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+                alertDialog.setTitle("Input quantity");
+
+                final EditText quantity_et = view.findViewById(R.id.quantity_et);
+
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(quantity_et.getText().toString().isEmpty())
+                            dish.setQtySel(0);
+                        else
+                            dish.setQtySel(Integer.parseInt(quantity_et.getText().toString()));
+
+                        RecyclerViewAdapter.this.notifyItemChanged(pos);
+                        alertDialog.dismiss();
+                    }
+                });
+
+
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        alertDialog.dismiss();
+                    }
+                });
+
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Remove", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dish.setQtySel(0);
+                        RecyclerViewAdapter.this.notifyItemChanged(pos);
+                        alertDialog.dismiss();
+                    }
+                });
+
+
+                alertDialog.setView(view);
+                alertDialog.show();
+
+            }
+
         });
 
         holder.itemView.setOnClickListener(v -> {
@@ -106,6 +170,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         TextView dishName;
         TextView dishDesc;
         TextView dishPrice;
+        Button qtySel;
 
         final View cardView = itemView.findViewById(R.id.card_view);
         ValueAnimator slideAnimator = ValueAnimator
@@ -118,6 +183,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             dishName = itemView.findViewById(R.id.dish_name_tv);
             dishPrice = itemView.findViewById(R.id.dish_price_tv);
             dishDesc = itemView.findViewById(R.id.dish_desc_tv);
+            qtySel = itemView.findViewById(R.id.qtySel_btn);
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }

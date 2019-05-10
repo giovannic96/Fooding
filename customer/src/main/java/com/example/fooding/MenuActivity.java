@@ -132,6 +132,7 @@ public class MenuActivity extends AppCompatActivity {
                     fire.setPrice(dataSnapshot1.child("price").getValue().toString());
                     fire.setDescription(dataSnapshot1.child("description").getValue().toString());
                     fire.setPhotoUri(uid+"/"+dataSnapshot1.getKey()+".jpg");
+                    fire.setQtySel(0);
                     dishes.add(fire);
 
                 }
