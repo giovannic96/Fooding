@@ -13,6 +13,8 @@ public class Dish implements Serializable {
     private int available_qty;
     private String photoUri;
     private long priceL;
+    private int qtySel;
+
 
     public Dish(String name, String description, ImageView photo, String price, Long priceL, int available_qty, String photoUri) {
         this.name = name;
@@ -76,5 +78,13 @@ public class Dish implements Serializable {
 
     public void setAvailable_qty(int available_qty) {
         this.available_qty = available_qty;
+    }
+
+    public int getQtySel() {
+        return qtySel;
+    }
+
+    public void setQtySel(int qtySel) {
+        this.qtySel = qtySel;
     }
 }

@@ -35,7 +35,7 @@
                 android:maxLines="2"
                 android:text="OCCCCCCCCCCCCCCCCfCCCCCCCCCCCCCCCCCCCCC"
                 android:textColor="@android:color/secondary_text_light"
-                android:textSize="22sp" />
+                android:textSize="22dp" />
 
             <TextView
                 android:id="@+id/order_price_tv"
@@ -52,7 +52,7 @@
                 android:paddingBottom="8dp"
                 android:text="64.466,66€"
                 android:textColor="@color/secondaryColor"
-                android:textSize="18sp"
+                android:textSize="18dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -67,7 +67,7 @@
                 android:layout_marginBottom="1dp"
                 android:layout_toStartOf="@id/order_price_tv"
                 android:text="2019.05.18 at 12.00"
-                android:textSize="15sp"/>
+                android:textSize="15dp"/>
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>

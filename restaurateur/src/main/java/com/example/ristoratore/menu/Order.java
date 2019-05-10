@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Order implements Serializable, Comparable<Order> {
 
-    private int orderId;
+    private String orderId;
     private int status;
     private ArrayList<Dish> dishList;
     private String info;
@@ -18,7 +18,9 @@ public class Order implements Serializable, Comparable<Order> {
     private String price;
     private long priceL;
 
-    public Order(int orderId, int status, ArrayList<Dish> dishList, String info, String address, GregorianCalendar deliveryTime, String price, Long priceL) {
+    public Order(){}
+
+    public Order(String orderId, int status, ArrayList<Dish> dishList, String info, String address, GregorianCalendar deliveryTime, String price, Long priceL) {
         this.orderId = orderId;
         this.status = status;
         this.dishList = dishList;
@@ -43,7 +45,7 @@ public class Order implements Serializable, Comparable<Order> {
         return info;
     }
 
-    public void setInfo(String description) {
+    public void setInfo(String info) {
         this.info = info;
     }
 
@@ -71,6 +73,14 @@ public class Order implements Serializable, Comparable<Order> {
 
     public void setPrice(String price) {
         this.price = price;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     @Override

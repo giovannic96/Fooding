@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,9 +16,16 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ristoratore.menu.Dish;
 import com.example.ristoratore.menu.Order;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -33,9 +41,9 @@ public class SingleOrderActivity extends AppCompatActivity {
 
 
     private RecyclerView rView;
-    private RecyclerViewAdapter adapter;
+    private SimpleRecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager rLayoutManager;
-    ArrayList<Dish> dishes;
+    ArrayList<Dish> dishes=new ArrayList<>();
     private int position;
     private Order order;
     private TextView address;
@@ -45,7 +53,11 @@ public class SingleOrderActivity extends AppCompatActivity {
     private ImageView orderStatus;
     private ImageButton switch_status_btn;
 
-
+    private DatabaseReference database;
+    private DatabaseReference orderRef;
+    private String uid;
+    private String restname;
+    private String restaddr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +69,37 @@ public class SingleOrderActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        database= FirebaseDatabase.getInstance().getReference();
+        uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
+        database.child("restaurateur").child(uid).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    restname=dataSnapshot.getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("restaurateur").child(uid).child("address").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    restaddr=dataSnapshot.getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
         position = i.getIntExtra("position",0);
         order = (Order)i.getSerializableExtra("order");
+        orderRef=database.child("restaurateur").child(uid).child("orders").child(order.getOrderId());
         address = findViewById(R.id.address);
         deliveryTime = findViewById(R.id.deliveryTime);
         info = findViewById(R.id.info);
@@ -92,28 +131,65 @@ public class SingleOrderActivity extends AppCompatActivity {
         deliveryTime.setText(sdf.format(order.getDeliveryTime().getTime()));
 
         loadData();
-        buildRecyclerView();
+        //buildRecyclerView();
 
         switch_status_btn.setOnClickListener(e -> {
-            final CharSequence[] items = { "New Order", "Cooking", "Ready","In Delivery","Delivered" };
+            final CharSequence[] items = { "New Order", "Cooking", "Ready","In Delivery"};
             AlertDialog.Builder builder = new AlertDialog.Builder(SingleOrderActivity.this);
             builder.setTitle("Change Order Status");
             builder.setItems(items, (dialog, item) -> {
                 if (items[item].equals("New Order")) {
                     order.setStatus(0);
+                    orderRef.child("status").setValue("0");
                     orderStatus.setImageResource(R.mipmap.new_order);
                 } else if (items[item].equals("Cooking")) {
                     order.setStatus(1);
+                    orderRef.child("status").setValue("1");
                     orderStatus.setImageResource(R.mipmap.cooking);
                 } else if (items[item].equals("Ready")) {
                     order.setStatus(2);
+                    orderRef.child("status").setValue("2");
                     orderStatus.setImageResource(R.mipmap.ready);
                 } else if (items[item].equals("In Delivery")) {
-                    order.setStatus(3);
-                    orderStatus.setImageResource(R.mipmap.in_delivery);
-                } else if (items[item].equals("Delivered")) {
-                    order.setStatus(4);
-                    orderStatus.setImageResource(R.mipmap.delivered);
+                    DatabaseReference bikerRef=database.child("biker");
+                    bikerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            int flag=0;
+                            for(DataSnapshot dataSnapshot1: dataSnapshot.getChildren() ){
+                                if(dataSnapshot1.child("status").getValue().toString().equals("True"))
+                                {
+                                    bikerRef.child(dataSnapshot1.getKey()).child("status").setValue("False");
+                                    bikerRef.child(dataSnapshot1.getKey()).child("currentOrder").child("restaurantName").setValue(restname);
+                                    bikerRef.child(dataSnapshot1.getKey()).child("currentOrder").child("restaurantAddress").setValue(restaddr);
+                                    bikerRef.child(dataSnapshot1.getKey()).child("currentOrder").child("deliveryAddress").setValue(order.getAddress());
+                                    bikerRef.child(dataSnapshot1.getKey()).child("currentOrder").child("deliveryHour").setValue(sdf.format(order.getDeliveryTime().getTime()));
+                                    bikerRef.child(dataSnapshot1.getKey()).child("currentOrder").child("price").setValue(order.getPrice());
+                                    bikerRef.child(dataSnapshot1.getKey()).child("currentOrder").child("info").setValue(order.getInfo());
+                                    bikerRef.child(dataSnapshot1.getKey()).child("currentOrder").child("restid").setValue(uid);
+                                    bikerRef.child(dataSnapshot1.getKey()).child("currentOrder").child("orderid").setValue(order.getOrderId());
+                                    order.setStatus(3);
+                                    orderRef.child("status").setValue("3");
+                                    orderStatus.setImageResource(R.mipmap.in_delivery);
+                                    flag=1;
+                                    break;
+                                }
+                            }
+                            if(flag==1){
+                                Toast.makeText(SingleOrderActivity.this, "Order has been sent to a biker!", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                Toast.makeText(SingleOrderActivity.this, "No biker available.", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
                 }
             });
             builder.show();
@@ -124,9 +200,27 @@ public class SingleOrderActivity extends AppCompatActivity {
 
 
     private void loadData() {
+        DatabaseReference dishesRef=database.child("restaurateur").child(uid).child("orders").child(order.getOrderId()).child("dishes");
+        dishesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot dataSnapshot1 :dataSnapshot.getChildren()){
 
+                    Dish fire = new Dish();
+                    fire.setName(dataSnapshot1.getKey());
+                    fire.setQtySel(Integer.parseInt(dataSnapshot1.getValue().toString()));
+                    fire.setPhotoUri(uid+"/"+dataSnapshot1.getKey()+".jpg");
+                    dishes.add(fire);
 
-        dishes = order.getDishList();
+                }
+                buildRecyclerView();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
     }
@@ -135,15 +229,15 @@ public class SingleOrderActivity extends AppCompatActivity {
         rView = findViewById(R.id.dishes_rView);
         rLayoutManager = new LinearLayoutManager(this);
         rView.setLayoutManager(rLayoutManager);
-        adapter = new RecyclerViewAdapter(this, dishes);
+        adapter = new SimpleRecyclerViewAdapter(this, dishes);
         rView.setAdapter(adapter);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        loadData();
-        buildRecyclerView();
+        //loadData();
+        //buildRecyclerView();
     }
 
 

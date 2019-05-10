@@ -15,6 +15,8 @@ public class Order implements Serializable, Comparable<Order> {
     private String price;
     private long priceL;
 
+    public Order(){}
+
     public Order(String orderId, int status, ArrayList<Dish> dishList, String info, String address, GregorianCalendar deliveryTime, String price, Long priceL) {
         this.orderId = orderId;
         this.status = status;

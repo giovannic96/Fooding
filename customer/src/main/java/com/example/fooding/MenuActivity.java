@@ -1,12 +1,15 @@
 package com.example.fooding;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,6 +60,7 @@ public class MenuActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private String uid;
+    private String uidcust;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +87,7 @@ public class MenuActivity extends AppCompatActivity {
         name = findViewById(R.id.name);
         restaurantPhoto=findViewById(R.id.photo_iv);
 
+        uidcust=FirebaseAuth.getInstance().getCurrentUser().getUid();
         uid=restaurant.getUid();
         name.setText(restaurant.getName());
 
@@ -175,6 +181,8 @@ public class MenuActivity extends AppCompatActivity {
                         orderRef.child("dishes").child(dish.getName()).setValue(dish.getQtySel());
                     }
                     alertDialog.dismiss();
+                    Toast.makeText(MenuActivity.this, "Order sent!",
+                            Toast.LENGTH_SHORT).show();
                     finish();
                 }
             });

@@ -185,6 +185,15 @@ public class MainActivity extends AppCompatActivity {
             Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
             startActivity(i);
         }
+        if(title.equals("ORDER")) {
+            if(FirebaseAuth.getInstance().getCurrentUser()==null){
+                Toast.makeText(this, "Error: user not signed in.",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Intent i = new Intent(getApplicationContext(), OrderActivity.class);
+            startActivity(i);
+        }
         if(title.equals("SIGN UP")) {
             Intent i = new Intent(getApplicationContext(), SignupActivity.class);
             startActivity(i);

@@ -56,7 +56,6 @@ import java.util.Date;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import id.zelory.compressor.Compressor;
 
 public class EditActivity extends AppCompatActivity {
 

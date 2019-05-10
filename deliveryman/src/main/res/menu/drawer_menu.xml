@@ -7,6 +7,10 @@
             android:icon="@drawable/ic_account_circle_black_24dp"
             android:title="@string/profile_btn" />
         <item
+            android:id="@+id/order_btn"
+            android:icon="@drawable/ic_directions_bike_black_24dp"
+            android:title="ORDER" />
+        <item
             android:id="@+id/signup_btn"
             android:icon="@drawable/ic_add_circle_outline_black_24dp"
             android:title="@string/signup_btn" />

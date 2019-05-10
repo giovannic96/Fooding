@@ -14,15 +14,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".EditActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".EditDishActivity" />
+        <activity android:name=".EditActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ProfileActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".EditDishActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".OrderActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".SingleOrderActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".SignupActivity"/>
-        <activity android:name=".LoginActivity"/>
+        <activity android:name=".SignupActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -30,8 +35,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddDishActivity" />
-        <activity android:name=".DailyOfferActivity" />
+        <activity android:name=".AddDishActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".DailyOfferActivity"
+            android:screenOrientation="portrait"/>
+
 
         <provider
             android:name="android.support.v4.content.FileProvider"

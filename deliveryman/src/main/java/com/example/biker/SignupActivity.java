@@ -77,7 +77,7 @@ public class SignupActivity extends AppCompatActivity {
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         String uid=user.getUid();
                         DatabaseReference database= FirebaseDatabase.getInstance().getReference();
-                        database.child("biker").child(uid).setValue("B");
+                        database.child("biker").child(uid).child("status").setValue("True");
                         Toast.makeText(SignupActivity.this, "Authentication successful.",
                                 Toast.LENGTH_SHORT).show();
                     } else {

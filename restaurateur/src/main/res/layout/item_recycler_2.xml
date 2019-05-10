@@ -38,7 +38,7 @@
                 android:textSize="22dp" />
 
             <TextView
-                android:id="@+id/dish_price_tv"
+                android:id="@+id/dish_qtySel_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/dish_name_tv"
@@ -50,30 +50,11 @@
                 android:paddingStart="0dp"
                 android:paddingEnd="2dp"
                 android:paddingBottom="8dp"
-                android:text="64.466,66€"
+                android:text="Ordered: 1"
                 android:textColor="@color/secondaryColor"
                 android:textSize="18dp"
                 android:textStyle="bold" />
 
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="14dp"
-            android:layout_marginEnd="14dp"
-            android:layout_marginTop="120dp">
-            <TextView
-                android:id="@+id/dish_desc_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Questa è la descrizione del piatto daskljf kjdklaòsjklfj askòljfklaòdjsf klajskdflj dakslòjfklsaòdjfkl ajklf jaòlsjf kòlas"
-                android:textSize="18sp"
-                android:textColor="@android:color/tertiary_text_dark"
-                android:maxLines="5"
-                android:visibility="visible"
-                android:maxLength="300"
-                android:ellipsize="end" />
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
