@@ -305,6 +305,18 @@ public class EditActivity extends AppCompatActivity {
                 return;
             }
 
+            String addr = addr_et.getText().toString();
+            if (addr.isEmpty()) {
+                Toast.makeText(this, "Address field is empty!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String cardnum = card_et.getText().toString();
+            if (cardnum.isEmpty()) {
+                Toast.makeText(this, "Card field is empty!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             database.child("customer").child(uid).child("address").setValue(addr_et.getText().toString());
             database.child("customer").child(uid).child("telephone").setValue(tel_et.getText().toString());
             database.child("customer").child(uid).child("cardnum").setValue(card_et.getText().toString());
