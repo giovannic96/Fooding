@@ -7,34 +7,37 @@
         android:layout_height="fill_parent"
         android:background="@drawable/food_background">
 
-    <ImageButton
-        android:id="@+id/dailyoffer_btn"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/order_btn"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="center"
-        android:layout_marginEnd="105dp"
-        android:layout_marginBottom="9dp"
-        android:background="@null"
-        android:clickable="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:src="@drawable/menu_icon" />
+        <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="100dp">
 
-    <ImageButton
-        android:id="@+id/order_btn"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="center"
-        android:layout_marginEnd="105dp"
-        android:layout_marginBottom="155dp"
-        android:background="@null"
-        android:clickable="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:src="@drawable/orders" />
+            <ImageButton
+                android:id="@+id/order_main_btn"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/dailyoffer_main_btn"
+                android:layout_gravity="center"
+                android:layout_marginTop="230dp"
+                android:background="@null"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:src="@drawable/orders" />
 
+            <ImageButton
+                android:id="@+id/dailyoffer_main_btn"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="55dp"
+                android:background="@null"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:src="@drawable/menu_icon" />
     </RelativeLayout>
+
+</RelativeLayout>

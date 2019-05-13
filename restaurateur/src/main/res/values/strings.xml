@@ -2,6 +2,7 @@
     <string name="app_name">Restaurateur</string>
     <string name="photo">Photo</string>
     <string name="cust_name">Name</string>
+    <string name="cust_type">Food type</string>
     <string name="cust_addr">Restaurant address</string>
     <string name="cust_tel">Telephone number</string>
     <string name="cust_mail">E-mail</string>
@@ -28,4 +29,17 @@
     <string name="select_qty">Select quantity</string>
     <string name="edit_opt">Edit</string>
     <string name="delete_opt">Delete</string>
+    <string name="password">Password</string>
+    <string name="signup_btn">SIGN UP</string>
+    <string name="signin_btn">SIGN IN</string>
+    <string name="signout_btn">SIGN OUT</string>
+    <string-array name="food_types">
+        <item>Food Type</item>
+        <item>Italian</item>
+        <item>Chinese</item>
+        <item>Mexican</item>
+        <item>Japanese</item>
+        <item>Burgers</item>
+        <item>Indian</item>
+    </string-array>
 </resources>

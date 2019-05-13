@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.AssetFileDescriptor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -23,7 +25,25 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -43,6 +63,11 @@ public class EditActivity extends AppCompatActivity {
     public static final String AREA_PREFS = "area_prefs";
     public static final String INFO_PREFS = "info_prefs";
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private DatabaseReference database;
+    private StorageReference storage;
+    private StorageReference photoref;
     private CircleImageView avatar;
     private ImageView addImage;
     private Button save_btn;
@@ -53,19 +78,24 @@ public class EditActivity extends AppCompatActivity {
     private EditText area_et;
     private EditText info_et;
     private Uri selectedImage;
-    SharedPreferences preferences;
-    SharedPreferences.Editor editor;
+    private String uid;
+    //SharedPreferences preferences;
+    //SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
+        mAuth=FirebaseAuth.getInstance();
+        currentUser=mAuth.getCurrentUser();
+        database = FirebaseDatabase.getInstance().getReference();
+        storage= FirebaseStorage.getInstance().getReference();
+
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        editor = preferences.edit();
+
         avatar = findViewById(R.id.avatar);
         save_btn = findViewById(R.id.avatar_btn);
         name_et = findViewById(R.id.name_et);
@@ -75,6 +105,11 @@ public class EditActivity extends AppCompatActivity {
         area_et = findViewById(R.id.area_et);
         info_et = findViewById(R.id.info_et);
         addImage = findViewById(R.id.add_image_btn);
+
+        //////OLD VERSION WITH SHARED PREFERENCES ////////
+
+        /*preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = preferences.edit();
 
         if(preferences.contains(EditActivity.URI_PREFS)) {
             avatar.setImageURI(Uri.parse(preferences.getString(EditActivity.URI_PREFS, "")));
@@ -92,7 +127,77 @@ public class EditActivity extends AppCompatActivity {
         if(preferences.contains(EditActivity.AREA_PREFS))
             area_et.setText(preferences.getString(AREA_PREFS, ""));
         if(preferences.contains(EditActivity.INFO_PREFS))
-            info_et.setText(preferences.getString(INFO_PREFS, ""));
+            info_et.setText(preferences.getString(INFO_PREFS, ""));*/
+
+        uid=currentUser.getUid();
+        photoref=storage.child(uid+"/photo.jpg");
+        photoref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(avatar);
+            }
+        });
+        mail_et.setText(currentUser.getEmail());
+        database.child("biker").child(uid).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    name_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("biker").child(uid).child("work_hours").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    hour_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("biker").child(uid).child("telephone").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    tel_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("biker").child(uid).child("work_area").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    area_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        database.child("biker").child(uid).child("info").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    info_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
         if (savedInstanceState != null){
@@ -110,7 +215,10 @@ public class EditActivity extends AppCompatActivity {
         });
 
         save_btn.setOnClickListener(e -> {
-            if(!(name_et.getText().toString().equals(preferences.getString(NAME_PREFS, "")))) {
+
+            ////////OLD VERSION WITH SHARED PREFERENCES//////////
+
+            /*if(!(name_et.getText().toString().equals(preferences.getString(NAME_PREFS, "")))) {
                 editor.putString(NAME_PREFS, name_et.getText().toString());
                 editor.apply();
             }
@@ -137,10 +245,119 @@ public class EditActivity extends AppCompatActivity {
             if(selectedImage != null && !(selectedImage.toString().equals(preferences.getString(URI_PREFS, "")))) {
                 editor.putString(URI_PREFS, selectedImage.toString());
                 editor.apply();
+            }*/
+
+            currentUser.updateEmail(mail_et.getText().toString());
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(name_et.getText().toString()).build();
+            currentUser.updateProfile(profileUpdates);
+
+            String description = info_et.getText().toString();
+            if(description.isEmpty())
+            {
+                Toast.makeText(this, "Description field is empty!", Toast.LENGTH_SHORT).show();
+                return;
             }
 
-            finish();
+            String tel = tel_et.getText().toString();
+            if(tel.isEmpty())
+            {
+                Toast.makeText(this, "Telephone field is empty!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String work_hours = hour_et.getText().toString();
+            if(work_hours.isEmpty())
+            {
+                Toast.makeText(this, "Work hours field is empty!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String work_area = area_et.getText().toString();
+            if(work_area.isEmpty())
+            {
+                Toast.makeText(this, "Address field is empty!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            database.child("biker").child(uid).child("work_hours").setValue(hour_et.getText().toString());
+            database.child("biker").child(uid).child("telephone").setValue(tel_et.getText().toString());
+            database.child("biker").child(uid).child("work_area").setValue(area_et.getText().toString());
+            database.child("biker").child(uid).child("info").setValue(info_et.getText().toString());
+            database.child("biker").child(uid).child("name").setValue(name_et.getText().toString());
+
+            if (selectedImage != null){
+                AssetFileDescriptor afd = null;
+                try {
+                    afd = getContentResolver().openAssetFileDescriptor(selectedImage, "r");
+                } catch (FileNotFoundException e1) {
+                    e1.printStackTrace();
+                }
+                long fileSize = afd.getLength();
+
+
+
+                if(fileSize>=1000000) {
+                    try {
+                        Bitmap bitmap = Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage), 640, 480, true);
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                        byte[] data = baos.toByteArray();
+                        UploadTask uploadTask = photoref.putBytes(data);
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+                                Toast.makeText(EditActivity.this, "Upload failure!",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                // ...
+                                Toast.makeText(EditActivity.this, "Upload successful!",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+
+                else {
+
+                    UploadTask uploadTask = photoref.putFile(selectedImage);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
+                            Toast.makeText(EditActivity.this, "Upload failure.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                            // ...
+                            Toast.makeText(EditActivity.this, "Upload successful!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                //finish();
+            }
+            else{
+                Toast.makeText(EditActivity.this, "Upload successful!",
+                        Toast.LENGTH_SHORT).show();
+            }
         });
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        currentUser =mAuth.getCurrentUser();
     }
 
     public boolean onOptionsItemSelected(MenuItem item)
@@ -152,8 +369,8 @@ public class EditActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(selectedImage != null && !(selectedImage.toString().equals(preferences.getString(URI_PREFS, ""))))
-            outState.putParcelable("uri", selectedImage);
+        //if(selectedImage != null && !(selectedImage.toString().equals(preferences.getString(URI_PREFS, ""))))
+            //outState.putParcelable("uri", selectedImage);
     }
 
     public boolean isStoragePermissionGranted() {

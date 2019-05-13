@@ -3,6 +3,8 @@ package com.example.ristoratore;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetFileDescriptor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -28,8 +30,25 @@ import android.widget.Toast;
 
 import com.blackcat.currencyedittext.CurrencyEditText;
 import com.example.ristoratore.menu.Dish;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -42,6 +61,12 @@ public class EditDishActivity extends AppCompatActivity {
     private static final int RESULT_SAVE = 34;
     private static final int RESULT_DELETE = 35;
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private DatabaseReference database;
+    private StorageReference storage;
+    private StorageReference photoref;
+
     private Dish dish;
 
     private ImageView photo;
@@ -53,12 +78,19 @@ public class EditDishActivity extends AppCompatActivity {
     private ImageButton qty_inc;
     private ImageButton qty_dec;
     private int position;
+    private String uid;
+    private String photoUri;
+    private Long priceL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.dish_descriptor);
+
+        mAuth=FirebaseAuth.getInstance();
+        currentUser=mAuth.getCurrentUser();
+        database = FirebaseDatabase.getInstance().getReference();
+        storage= FirebaseStorage.getInstance().getReference();
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -75,6 +107,74 @@ public class EditDishActivity extends AppCompatActivity {
 
         //name_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         //desc_et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+
+        Intent i = getIntent();
+        position = i.getIntExtra("position", 0);
+        Dish d = (Dish)i.getSerializableExtra("dish");
+        name_et.setText(d.getName(), TextView.BufferType.EDITABLE);
+
+        uid=currentUser.getUid();
+        String name = name_et.getText().toString();
+        photoref=storage.child(uid+"/"+name+".jpg");
+        photoUri=uid+"/"+name+".jpg";
+        photoref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(photo);
+            }
+        });
+
+        database.child("restaurateur").child(uid).child("menu").child(name).child("quantity").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    qty_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        database.child("restaurateur").child(uid).child("menu").child(name).child("description").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    desc_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        database.child("restaurateur").child(uid).child("menu").child(name).child("price").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    price_et.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        database.child("restaurateur").child(uid).child("menu").child(name).child("priceL").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!(dataSnapshot.getValue()==null))
+                    priceL=Long.parseLong(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         if (savedInstanceState != null) {
             if(savedInstanceState.containsKey("uri_photo")) {
@@ -125,8 +225,8 @@ public class EditDishActivity extends AppCompatActivity {
         });
 
         save_btn.setOnClickListener(v -> {
-            String name = name_et.getText().toString();
-            if(name.isEmpty())
+            String name1 = name_et.getText().toString();
+            if(name1.isEmpty())
             {
                 Toast.makeText(this, "Name field is empty!", Toast.LENGTH_SHORT).show();
                 return;
@@ -137,6 +237,7 @@ public class EditDishActivity extends AppCompatActivity {
                 Toast.makeText(this, "Description field is empty!", Toast.LENGTH_SHORT).show();
                 return;
             }
+
             ImageView photo = this.photo;
             Long priceLong = price_et.getRawValue();
             if(priceLong.toString().equals("0")) {
@@ -144,6 +245,8 @@ public class EditDishActivity extends AppCompatActivity {
                 return;
             }
             String price = price_et.formatCurrency(price_et.getRawValue());
+            priceL=priceLong;
+
             int qty;
             if(qty_et.getText().toString().matches("^-?\\d+$"))
                 qty = Integer.parseInt(qty_et.getText().toString());
@@ -153,23 +256,212 @@ public class EditDishActivity extends AppCompatActivity {
                 Toast.makeText(this, "Quantity is zero!", Toast.LENGTH_SHORT).show();
                 return;
             }
+            if(name.equals(name1)) {
+                database.child("restaurateur").child(uid).child("menu").child(name).child("price").setValue(price);
+                database.child("restaurateur").child(uid).child("menu").child(name).child("priceL").setValue(Long.toString(priceL));
+                database.child("restaurateur").child(uid).child("menu").child(name).child("description").setValue(description);
+                database.child("restaurateur").child(uid).child("menu").child(name).child("quantity").setValue(qty);
+                dish = new Dish(name1, description, photo, price, priceLong, qty, photoUri != null ? photoUri : "");
+                if (selectedPhoto != null){
+                    AssetFileDescriptor afd = null;
+                    try {
+                        afd = getContentResolver().openAssetFileDescriptor(selectedPhoto, "r");
+                    } catch (FileNotFoundException e1) {
+                        e1.printStackTrace();
+                    }
+                    long fileSize = afd.getLength();
 
-            dish = new Dish(name, description, photo, price, priceLong, qty, selectedPhoto != null ? selectedPhoto.toString() : "");
-            finish();
+
+
+                    if(fileSize>=1000000) {
+                        try {
+                            Bitmap bitmap = Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedPhoto), 640, 480, true);
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                            byte[] data = baos.toByteArray();
+                            UploadTask uploadTask = photoref.putBytes(data);
+                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    // Handle unsuccessful uploads
+                                    Toast.makeText(EditDishActivity.this, "Upload failure!",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                    // ...
+                                    Toast.makeText(EditDishActivity.this, "Upload successful!",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+
+                    else {
+
+                        UploadTask uploadTask = photoref.putFile(selectedPhoto);
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+                                Toast.makeText(EditDishActivity.this, "Upload failure.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                // ...
+                                Toast.makeText(EditDishActivity.this, "Upload successful!",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                    //finish();
+                }
+                else{
+                    Toast.makeText(EditDishActivity.this, "Upload successful!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+            else {
+                database.child("restaurateur").child(uid).child("menu").child(name).removeValue();
+                if(selectedPhoto==null) {
+                    File localFile = null;
+                    try {
+                        localFile = File.createTempFile("images", "jpg");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    File finalLocalFile = localFile;
+                    photoref.getFile(finalLocalFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            // Local temp file has been created
+                            photoref = storage.child(uid + "/" + name1 + ".jpg");
+                            photoUri = uid + "/" + name1 + ".jpg";
+                            UploadTask uploadTask = photoref.putFile(Uri.fromFile(finalLocalFile));
+                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    // Handle unsuccessful uploads
+                                    Toast.makeText(EditDishActivity.this, "Upload failure.",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                    // ...
+                                    storage.child(uid + "/" + name + ".jpg").delete();
+                                    dish = new Dish(name1, description, photo, price, priceLong, qty, photoUri != null ? photoUri : "");
+                                    Toast.makeText(EditDishActivity.this, "Upload successful!",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle any errors
+                        }
+                    });
+
+                    localFile.delete();
+                    finalLocalFile.delete();
+                }
+                else{
+                    photoref = storage.child(uid + "/" + name1 + ".jpg");
+                    photoUri = uid + "/" + name1 + ".jpg";
+                    AssetFileDescriptor afd = null;
+                    try {
+                        afd = getContentResolver().openAssetFileDescriptor(selectedPhoto, "r");
+                    } catch (FileNotFoundException e1) {
+                        e1.printStackTrace();
+                    }
+                    long fileSize = afd.getLength();
+
+
+
+                    if(fileSize>=1000000) {
+                        try {
+                            Bitmap bitmap = Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedPhoto), 640, 480, true);
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                            byte[] data = baos.toByteArray();
+                            UploadTask uploadTask = photoref.putBytes(data);
+                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    // Handle unsuccessful uploads
+                                    Toast.makeText(EditDishActivity.this, "Upload failure!",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                    // ...
+                                    Toast.makeText(EditDishActivity.this, "Upload successful!",
+                                            Toast.LENGTH_SHORT).show();
+                                    dish = new Dish(name1, description, photo, price, priceLong, qty, photoUri != null ? photoUri : "");
+                                }
+                            });
+
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+
+                    else {
+
+                        UploadTask uploadTask = photoref.putFile(selectedPhoto);
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+                                Toast.makeText(EditDishActivity.this, "Upload failure.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                // ...
+                                Toast.makeText(EditDishActivity.this, "Upload successful!",
+                                        Toast.LENGTH_SHORT).show();
+                                dish = new Dish(name1, description, photo, price, priceLong, qty, photoUri != null ? photoUri : "");
+                            }
+                        });
+                    }
+                    storage.child(uid + "/" + name + ".jpg").delete();
+                    //finish();
+                }
+
+
+                database.child("restaurateur").child(uid).child("menu").child(name1).child("price").setValue(price);
+                database.child("restaurateur").child(uid).child("menu").child(name1).child("description").setValue(description);
+                database.child("restaurateur").child(uid).child("menu").child(name1).child("quantity").setValue(qty);
+                database.child("restaurateur").child(uid).child("menu").child(name1).child("priceL").setValue(Long.toString(priceL));
+
+            }
+
+
+
+            //finish();
         });
 
-        Intent i = getIntent();
-        position = i.getIntExtra("position", 0);
-        Dish d = (Dish)i.getSerializableExtra("dish");
-        if(d.getPhotoUri() != null && !d.getPhotoUri().equals("")){
-            selectedPhoto = Uri.parse(d.getPhotoUri());
-            photo.setImageURI(selectedPhoto);
-        }
+    }
 
-        name_et.setText(d.getName(), TextView.BufferType.EDITABLE);
-        desc_et.setText(d.getDescription(), TextView.BufferType.EDITABLE);
-        price_et.setValue(d.getPriceL());
-        qty_et.setText(String.valueOf(d.getAvailable_qty()), TextView.BufferType.EDITABLE);
+    @Override
+    public void onStart(){
+        super.onStart();
+        currentUser =mAuth.getCurrentUser();
     }
 
     @Override
